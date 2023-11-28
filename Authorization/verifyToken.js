@@ -6,10 +6,16 @@ const verifyToken = (req, res, next) => {
   if (!token) return res.status(403).send('Access denied.');
 
   jwt.verify(token, secretKey, (err, user) => {
-    if (err) return res.status(403).send('Invalid token.');
+    if (err) {
+      console.error('Error verifying token:', err);
+      return res.status(403).send('Invalid Token');
+    }
+
+    console.log('Decoded user:', user);
+
     req.user = user;
     next();
   });
-};
+}
 
 module.exports = verifyToken;
