@@ -39,3 +39,14 @@ CREATE TABLE IF NOT EXISTS interview(
   link VARCHAR(255) NOT NULL,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
+CREATE TABLE IF NOT EXISTS postings(
+  id SERIAL PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  pdate DATE NOT NULL,
+  no_of_applicants INT NOT NULL,
+  location VARCHAR(20) NOT NULL,
+  stipend VARCHAR(20) NOT NULL,
+  dept VARCHAR(255) NOT NULL,
+  description TEXT NOT NULL,
+  last_date DATE NOT NULL
+  );
