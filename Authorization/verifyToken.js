@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
-const secretKey = 'eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTcwMDkwOTI1OSwiaWF0IjoxNzAwOTA5MjU4fQ.HVwsICuRlRh0DV9PK8IRVeqXFTA2IxKbkOzQBP_4-J4';
-
+require('dotenv').config();
+const secretKey = process.env.secretKey;
 const verifyToken = (req, res, next) => {
   const token = req.header('Authorization');
   if (!token) return res.status(403).send('Access denied.');

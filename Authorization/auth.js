@@ -1,9 +1,8 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const db = require('../Config/dbConnection');
-
-const secretKey = 'eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTcwMDkwOTI1OSwiaWF0IjoxNzAwOTA5MjU4fQ.HVwsICuRlRh0DV9PK8IRVeqXFTA2IxKbkOzQBP_4-J4';
-
+require('dotenv').config();
+const secretKey = process.env.secretKey;
 const registerUser = async (firstname, lastname, password, email, phone_no) => {
   const hashedPassword = await bcrypt.hash(password, 10);
   const result = await db.query(
