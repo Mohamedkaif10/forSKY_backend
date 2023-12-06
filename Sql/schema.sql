@@ -68,6 +68,15 @@ CREATE TABLE IF NOT EXISTS pdfs (
   job_id INT NOT NULL,
   FOREIGN KEY (job_id) REFERENCES jobDetails(id) ON DELETE CASCADE
 );
+ALTER TABLE jobDetails
+ADD COLUMN stipend_amount INT NOT NULL,
+ADD COLUMN last_date DATE NOT NULL,
+ADD COLUMN vacancies INT,
+ADD COLUMN location VARCHAR(100) NOT NULL,
+ADD COLUMN scholar_link VARCHAR(255),
+ADD COLUMN duration INT NOT NULL,
+ADD COLUMN description TEXT NOT NULL;
+
 
 
 
