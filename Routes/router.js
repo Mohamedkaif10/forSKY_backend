@@ -87,7 +87,7 @@ router.get('/user-profile', verifyToken, async (req, res) => {
       res.json(result);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: error.message }); // Respond with error details
+      res.status(500).json({ error: error.message }); 
     }
   });
  router.post('/job-details',verifyToken,async(req,res)=>{
