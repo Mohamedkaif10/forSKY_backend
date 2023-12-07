@@ -92,9 +92,9 @@ router.get('/user-profile', verifyToken, async (req, res) => {
   });
  router.post('/job-details',verifyToken,async(req,res)=>{
   try {
-    const {dept_name,job_title,stipend,last_date,vacancies,location,scholar_link,duration,description } = req.body;
+    const {dept_name,job_title,stipend_amount,last_date,vacancies,location,scholar_link,duration,description } = req.body;
     const userID = req.user.id;
-    const job_result = await addjobDetails(userID,dept_name,job_title,stipend,last_date,vacancies,location,scholar_link,duration,description);
+    const job_result = await addjobDetails(userID,dept_name,job_title,stipend_amount,last_date,vacancies,location,scholar_link,duration,description);
     res.json(job_result);
   } catch (error) {
     console.log(error)

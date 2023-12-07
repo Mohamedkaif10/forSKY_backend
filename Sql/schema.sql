@@ -68,14 +68,21 @@ CREATE TABLE IF NOT EXISTS pdfs (
   job_id INT NOT NULL,
   FOREIGN KEY (job_id) REFERENCES jobDetails(id) ON DELETE CASCADE
 );
-ALTER TABLE jobDetails
-ADD COLUMN stipend_amount INT NOT NULL,
-ADD COLUMN last_date DATE NOT NULL,
-ADD COLUMN vacancies INT,
-ADD COLUMN location VARCHAR(100) NOT NULL,
-ADD COLUMN scholar_link VARCHAR(255),
-ADD COLUMN duration INT NOT NULL,
-ADD COLUMN description TEXT NOT NULL;
+CREATE TABLE  IF NOT EXISTS jobdetails(
+  id SERIAL PRIMARY KEY,
+  user_id INT NOT NULL,
+  department_name VARCHAR(255) NOT NULL,
+  job_title VARCHAR(255) NOT NULL,
+  stipend_amount INT NOT NULL,
+  last_date DATE NOT NULL,
+  vacancies INT,
+  location VARCHAR(100) NOT NULL,
+  scholar_link VARCHAR(255),
+  duration INT NOT NULL,
+  description TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
 
 
 

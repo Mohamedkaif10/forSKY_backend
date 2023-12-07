@@ -50,10 +50,10 @@ const scheduleInterview = async (userID, date_interview, from_time, link) => {
   }
 };
  
-const addjobDetails = async(userID,dept_name,job_title,stipend,last_date,vacancies,location,scholar_link,duration,description)=>{
+const addjobDetails = async(userID,dept_name,job_title,stipend_amount,last_date,vacancies,location,scholar_link,duration,description)=>{
   try {
     const insertResult =await db.query('INSERT INTO jobdetails(user_id,department_name,job_title,stipend_amount,last_date,vacancies,location,scholar_link,duration,description) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)',
-    [userID,dept_name,job_title,stipend,last_date,vacancies,location,scholar_link,duration,description]
+    [userID,dept_name,job_title,stipend_amount,last_date,vacancies,location,scholar_link,duration,description]
     )
     console.log(insertResult);
 
