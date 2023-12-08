@@ -9,8 +9,10 @@ const storage = multer.memoryStorage();
 const fs = require('fs');
 const stream = require('stream');
 const db = require('../Config/dbConnection');
+const path = require('path');
 
 const upload = multer({ storage: storage });
+let storedJobId;
 router.post('/register', async (req, res) => {
     const { firstname, lastname,  password, email, phone_no } = req.body;
   
@@ -36,18 +38,7 @@ router.post('/login', async (req, res) => {
   }
 });
 
-router.get('/user-profile', verifyToken, async (req, res) => {
-    try {
-      // Assuming req.user contains the user information, including firstname
-      console.log('User information:', req.user);
-  
-      const { firstname } = req.user;
-      res.json({ user: { firstname } });
-    } catch (error) {
-      console.error(error);
-      res.status(500).send('Internal Server Error');
-    }
-  });
+
   router.post('/additional-info', verifyToken, async (req, res) => {
     try {
       const { department, specialization, researchAreas } = req.body;
@@ -90,32 +81,20 @@ router.get('/user-profile', verifyToken, async (req, res) => {
       res.status(500).json({ error: error.message }); 
     }
   });
- router.post('/job-details',verifyToken,async(req,res)=>{
-  try {
-    const {dept_name,job_title,stipend_amount,last_date,vacancies,location,scholar_link,duration,description } = req.body;
-    const userID = req.user.id;
-    const job_result = await addjobDetails(userID,dept_name,job_title,stipend_amount,last_date,vacancies,location,scholar_link,duration,description);
-    res.json(job_result);
-  } catch (error) {
-    console.log(error)
-    res.status(500).json({error:error.message})
-  }
- })
-  router.post('/upload', upload.single('pdf'), verifyToken, async (req, res) => {
+  router.post('/job-details', verifyToken, upload.single('pdf'), async (req, res) => {
     try {
-      // Ensure that req.file.buffer is a Buffer
-      if (!Buffer.isBuffer(req.file.buffer)) {
-        throw new Error('req.file.buffer is not a valid Buffer.');
-      }
+      const { dept_name, job_title, stipend_amount, last_date, vacancies, location, scholar_link, duration, description } = req.body;
+      const userId = req.user.id;
+      const pdf_name = req.file.originalname;
+      const serverFilePath = path.join(__dirname, '../pdfs', pdf_name);
   
-      // Upload PDF to Google Drive
-      
+      fs.writeFileSync(serverFilePath, req.file.buffer);
+  
       const fileMetadata = {
-        name: req.file.originalname, // Use the original name of the uploaded file
-        parents: ['1kcGDybGowsIlhR7ELUHjPUrZji1ckH32'], // Replace with the ID of your Google Drive folder
+        name: pdf_name,
+        parents: ['1kcGDybGowsIlhR7ELUHjPUrZji1ckH32'],
       };
   
-      // Convert buffer to readable stream
       const bufferStream = new stream.PassThrough();
       bufferStream.end(req.file.buffer);
   
@@ -130,14 +109,19 @@ router.get('/user-profile', verifyToken, async (req, res) => {
         fields: 'id',
       });
   
-      const fileId = driveRes.data.id;
-      // Store PDF name and ID in the database
-      await db.query('INSERT INTO pdfs (pdf_name, pdf_id, job_id) VALUES ($1, $2,$3)', [fileMetadata.name, fileId]);
+      const pdfId = driveRes.data.id;
   
-      res.json({ success: true, fileId });
+      await addjobDetails(userId, dept_name, job_title, stipend_amount, last_date, vacancies, location, scholar_link, duration, description, pdf_name, pdfId);
+  
+      fs.unlinkSync(serverFilePath);
+  
+      res.json({ success: true, message: 'Job details added', pdfId });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ success: false, error: 'Internal Server Error' });
+      res.status(500).json({ error: error.message });
     }
   });
+
+
+
 module.exports = router

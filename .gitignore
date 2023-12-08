@@ -3,3 +3,5 @@ package-lock.json
 .env
 forsky_credentials.json
 token.json
+uploads
+pdfs

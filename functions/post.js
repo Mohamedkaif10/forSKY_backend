@@ -50,17 +50,18 @@ const scheduleInterview = async (userID, date_interview, from_time, link) => {
   }
 };
  
-const addjobDetails = async(userID,dept_name,job_title,stipend_amount,last_date,vacancies,location,scholar_link,duration,description)=>{
+const addjobDetails = async (userID, dept_name, job_title, stipend_amount, last_date, vacancies, location, scholar_link, duration, description, pdf_name, pdf_id) => {
   try {
-    const insertResult =await db.query('INSERT INTO jobdetails(user_id,department_name,job_title,stipend_amount,last_date,vacancies,location,scholar_link,duration,description) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)',
-    [userID,dept_name,job_title,stipend_amount,last_date,vacancies,location,scholar_link,duration,description]
-    )
+    const insertResult = await db.query('INSERT INTO jobdetails(user_id,department_name,job_title,stipend_amount,last_date,vacancies,location,scholar_link,duration,description,pdf_name,pdf_id) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)',
+      [userID, dept_name, job_title, stipend_amount, last_date, vacancies, location, scholar_link, duration, description, pdf_name, pdf_id]
+    );
+
     console.log(insertResult);
 
-   if (insertResult.rowCount > 0) {
-      return { success: true, message: "Interview details added" };
+    if (insertResult.rowCount > 0) {
+      return { success: true, message: "Job details added" };
     } else {
-      throw new Error('Failed to add interview details'); 
+      throw new Error('Failed to add job details');
     }
   } catch (error) {
     console.error(error);
@@ -68,5 +69,46 @@ const addjobDetails = async(userID,dept_name,job_title,stipend_amount,last_date,
   }
 };
 
+// const uploadPdf = async (file) => {
+//   try {
+//     if (!Buffer.isBuffer(file.buffer)) {
+//       throw new Error('file.buffer is not a valid Buffer.');
+//     }
 
+//     const serverFilePath = path.join(__dirname, '../pdfs', file.originalname);
+//     fs.writeFileSync(serverFilePath, file.buffer);
+
+//     const fileMetadata = {
+//       name: file.originalname,
+//       parents: ['1kcGDybGowsIlhR7ELUHjPUrZji1ckH32'],
+//     };
+
+//     const bufferStream = new stream.PassThrough();
+//     bufferStream.end(file.buffer);
+
+//     const media = {
+//       mimeType: 'application/pdf',
+//       body: bufferStream,
+//     };
+
+//     const driveRes = await drive.files.create({
+//       resource: fileMetadata,
+//       media: media,
+//       fields: 'id',
+//     });
+
+//     const fileId = driveRes.data.id;
+
+//     await db.query('UPDATE jobdetails SET pdf_name = $1, pdf_id = $2 WHERE id = $3',
+//       [fileMetadata.name,  jobId]
+//     );
+
+//     fs.unlinkSync(serverFilePath);
+
+//     return { success: true, message: 'PDF uploaded successfully', fileId };
+//   } catch (error) {
+//     console.error(error);
+//     throw new Error('Internal Server Error');
+//   }
+// };
 module.exports = { addAdditionalInfo ,addprojects,scheduleInterview, addjobDetails};

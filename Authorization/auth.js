@@ -16,7 +16,6 @@ const registerUser = async (firstname, lastname, password, email, phone_no) => {
     email: user.email,
     phone_no: user.phone_no};
 };
-
 const loginUser = async (email, password) => {
     const result = await db.query('SELECT id, email, password, firstname FROM users WHERE email = $1', [email]);
   

@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const routes = require('./Routes/router');
-const getroutes =require('./Routes/router_2');
+const routes = require('./Routes/post_router');
+const getroutes =require('./Routes/get_router');
 const googleAuth = require('./Routes/googleRoute')
 const passport =require('./Config/passport-config')
 const app = express();

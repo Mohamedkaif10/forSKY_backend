@@ -80,9 +80,12 @@ CREATE TABLE  IF NOT EXISTS jobdetails(
   scholar_link VARCHAR(255),
   duration INT NOT NULL,
   description TEXT NOT NULL,
+  pdf_name VARCHAR(255),
+  pdf_id VARCHAR(255)
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
+
 
 
 

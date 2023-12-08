@@ -3,7 +3,7 @@ const router = express.Router();
 const verifyToken = require('../Authorization/verifyToken');
 const { getProjects,getFilteredJobDetails} = require('../functions/get');
 const db = require('../Config/dbConnection');
-router.get('/postings',async(req,res)=>{
+router.get('/get_job',async(req,res)=>{
     try{
         const result=await db.query('SELECT * FROM jobdetails');
         const postings=result.rows;
@@ -13,7 +13,18 @@ router.get('/postings',async(req,res)=>{
         res.status(500).send('Internal Server Error');
     }
 })
+router.get('/user-profile', verifyToken, async (req, res) => {
+  try {
+    // Assuming req.user contains the user information, including firstname
+    console.log('User information:', req.user);
 
+    const { firstname } = req.user;
+    res.json({ user: { firstname } });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+});
 
 router.get('/projects', verifyToken, async (req, res) => {
   try {
