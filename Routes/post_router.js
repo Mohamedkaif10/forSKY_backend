@@ -12,7 +12,6 @@ const db = require('../Config/dbConnection');
 const path = require('path');
 
 const upload = multer({ storage: storage });
-let storedJobId;
 router.post('/register', async (req, res) => {
     const { firstname, lastname,  password, email, phone_no } = req.body;
   
@@ -31,7 +30,8 @@ router.post('/login', async (req, res) => {
 
   try {
     const token = await loginUser(email, password);
-    res.status(200).json({ token });
+    console.log('Login successful. Sending token:', token);
+    res.status(200).json(token);
   } catch (error) {
     console.error(error);
     res.status(401).send(error.message);
@@ -82,7 +82,10 @@ router.post('/login', async (req, res) => {
     }
   });
   router.post('/job-details', verifyToken, upload.single('pdf'), async (req, res) => {
+    console.log("the ",req.file); 
+    console.log(req.body)
     try {
+     
       const { dept_name, job_title, stipend_amount, last_date, vacancies, location, scholar_link, duration, description } = req.body;
       const userId = req.user.id;
       const pdf_name = req.file.originalname;
@@ -116,6 +119,7 @@ router.post('/login', async (req, res) => {
       fs.unlinkSync(serverFilePath);
   
       res.json({ success: true, message: 'Job details added', pdfId });
+      res.status(200)
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: error.message });

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const verifyToken = require('../Authorization/verifyToken');
-const { getProjects,getFilteredJobDetails} = require('../functions/get');
+const { getProjects,getFilteredJobDetails,getJobDetails} = require('../functions/get');
 const db = require('../Config/dbConnection');
 router.get('/get_job',async(req,res)=>{
     try{
@@ -53,6 +53,27 @@ router.get('/filtered-job-details', async (req, res) => {
     res.status(500).json({ success: false, error: 'Internal Server Error' });
   }
 });
+
+router.get('/job-details/:userId', async (req, res) => {
+    try {
+      const userId = req.params.userId;
+  
+      // Call the function to get job details by userId
+      const userJobs = await getJobDetails(userId);
+  
+      // Check if jobs are found
+      if (!userJobs || userJobs.length === 0) {
+        return res.status(404).json({ error: 'No jobs found for the user' });
+      }
+  
+      // Respond with the list of jobs
+      res.status(200).json({ success: true, userJobs });
+    } catch (error) {
+      console.log(error)
+      console.error('Error in GET /job-details/:userId:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
 
 
 module.exports = router;

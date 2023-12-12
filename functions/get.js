@@ -36,5 +36,17 @@ const getFilteredJobDetails = async (filters) => {
     throw new Error('Error fetching filtered job details');
   }
 };
+const getJobDetails = async (userId) => {
+  try {
+    const sqlQuery = 'SELECT * FROM jobdetails WHERE user_id = $1 ORDER BY created_at DESC LIMIT 1';
+    console.log('SQL Query:', sqlQuery);
 
-module.exports = { getProjects,getFilteredJobDetails};
+    const userJobs = await db.query(sqlQuery, [userId]);
+    return userJobs;
+  } catch (error) {
+    console.error('Error fetching job details:', error);
+    throw error;
+  }
+};
+
+module.exports = { getProjects,getFilteredJobDetails,getJobDetails};
