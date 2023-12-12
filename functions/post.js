@@ -69,46 +69,17 @@ const addjobDetails = async (userID, dept_name, job_title, stipend_amount, last_
   }
 };
 
-// const uploadPdf = async (file) => {
-//   try {
-//     if (!Buffer.isBuffer(file.buffer)) {
-//       throw new Error('file.buffer is not a valid Buffer.');
-//     }
-
-//     const serverFilePath = path.join(__dirname, '../pdfs', file.originalname);
-//     fs.writeFileSync(serverFilePath, file.buffer);
-
-//     const fileMetadata = {
-//       name: file.originalname,
-//       parents: ['1kcGDybGowsIlhR7ELUHjPUrZji1ckH32'],
-//     };
-
-//     const bufferStream = new stream.PassThrough();
-//     bufferStream.end(file.buffer);
-
-//     const media = {
-//       mimeType: 'application/pdf',
-//       body: bufferStream,
-//     };
-
-//     const driveRes = await drive.files.create({
-//       resource: fileMetadata,
-//       media: media,
-//       fields: 'id',
-//     });
-
-//     const fileId = driveRes.data.id;
-
-//     await db.query('UPDATE jobdetails SET pdf_name = $1, pdf_id = $2 WHERE id = $3',
-//       [fileMetadata.name,  jobId]
-//     );
-
-//     fs.unlinkSync(serverFilePath);
-
-//     return { success: true, message: 'PDF uploaded successfully', fileId };
-//   } catch (error) {
-//     console.error(error);
-//     throw new Error('Internal Server Error');
-//   }
-// };
-module.exports = { addAdditionalInfo ,addprojects,scheduleInterview, addjobDetails};
+const addIdeas = async(userID,title,stream,content)=>{
+    try{
+        const insertResult=await db.query(
+            'INSERT INTO ideas (user_id,title,stream,content) VALUES ($1, $2, $3, $4)',
+            [userID,title,stream,content]
+        );
+        console.log(insertResult)
+        return{success:true,message:"ideas added"}
+    }catch(error){
+        console.log(error);
+        throw new Error('Interal Server Error')
+    }
+}
+module.exports = { addAdditionalInfo ,addprojects,scheduleInterview, addjobDetails,addIdeas};

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const verifyToken = require('../Authorization/verifyToken');
-const { getProjects,getFilteredJobDetails,getJobDetails} = require('../functions/get');
+const { getProjects,getFilteredJobDetails,getJobDetails,getIdeas} = require('../functions/get');
 const db = require('../Config/dbConnection');
 router.get('/get_job',async(req,res)=>{
     try{
@@ -12,6 +12,15 @@ router.get('/get_job',async(req,res)=>{
         console.error(error);
         res.status(500).send('Internal Server Error');
     }
+})
+router.get('/get-ideas',verifyToken,async(res)=>{
+  try{
+    const ideas = await getIdeas();
+    res.json({success:true,ideas})
+  }catch(error){
+    console.log(error);
+    res.status(500).send('Internal Server Error');
+  }
 })
 router.get('/user-profile', verifyToken, async (req, res) => {
   try {
@@ -43,6 +52,8 @@ router.get('/filtered-job-details', async (req, res) => {
     const filters = {
       location: req.query.location,
       stipend_amount: req.query.stipend_amount,
+      department_name:req.query.department_name,
+      job_title:req.query.job_title,
     };
 
     const jobDetails = await getFilteredJobDetails(filters);
