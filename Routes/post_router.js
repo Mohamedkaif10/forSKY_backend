@@ -125,10 +125,10 @@ router.post('/login', async (req, res) => {
       res.status(500).json({ error: error.message });
     }
   });
-router.post('/ideas',verifyToken,async(req,res)=>{
+router.post('/ideas',async(req,res)=>{
   try{
     const{title,stream,content}=req.body;
-    const user_id = req.user.id;
+    const user_id = 13;
     const result = await addIdeas(user_id,title,stream,content)
     res.status(200).json(result);
   }catch(error){

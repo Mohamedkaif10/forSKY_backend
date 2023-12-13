@@ -1,19 +1,23 @@
 const express = require('express');
 const router = express.Router();
 const verifyToken = require('../Authorization/verifyToken');
-const { getProjects,getFilteredJobDetails,getJobDetails,getIdeas} = require('../functions/get');
+const { getProjects,getFilteredJobDetails,getJobDetails,getIdeas,getIdeasByStream,getJobDetailsPage} = require('../functions/get');
 const db = require('../Config/dbConnection');
-router.get('/get_job',async(req,res)=>{
-    try{
-        const result=await db.query('SELECT * FROM jobdetails');
-        const postings=result.rows;
-        res.json({success:true,postings});
-    }catch(error){
-        console.error(error);
-        res.status(500).send('Internal Server Error');
-    }
-})
-router.get('/get-ideas',verifyToken,async(res)=>{
+
+router.get('/get_job', async (req, res) => {
+  try {
+    const page = parseInt(req.query.page, 10) || 1;
+    const pageSize = parseInt(req.query.pageSize, 10) || 5;
+
+    const jobDetails = await getJobDetailsPage (page, pageSize);
+
+    res.json({ success: true, jobDetails, page, pageSize });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+router.get('/get-ideas',async(req,res)=>{
   try{
     const ideas = await getIdeas();
     res.json({success:true,ideas})
@@ -82,6 +86,17 @@ router.get('/job-details/:userId', async (req, res) => {
     } catch (error) {
       console.log(error)
       console.error('Error in GET /job-details/:userId:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
+
+  router.get('/ideasByStream/:stream', async (req, res) => {
+    const stream = req.params.stream;
+    try {
+      const ideas = await getIdeasByStream(stream);
+      res.status(200).json(ideas);
+    } catch (error) {
+      console.error('Error getting ideas by stream:', error);
       res.status(500).json({ error: 'Internal server error' });
     }
   });

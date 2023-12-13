@@ -27,11 +27,11 @@ const getFilteredJobDetails = async (filters) => {
   if (filters.stipend) {
     queryText += ` AND stipend_amount >= ${filters.stipend_amount}`;
   }
-  if (filters.department_name ) {
-    queryText += ` AND department_name  = ${filters.department_name }`;
+  if (filters.department_name) {
+    queryText += ` AND department_name  = '${filters.department_name}'`;
   }
   if (filters.job_title) {
-    queryText += ` AND job_title = ${filters.job_title}`;
+    queryText += ` AND job_title = '${filters.job_title}'`;
   }
   try {
     const result = await db.query(queryText);
@@ -66,5 +66,26 @@ const getIdeas = async()=>{
     throw new Error('Error fetching ideas');
   }
 }
+const getIdeasByStream = async (stream) => {
+  try {
+    const result = await db.query('SELECT * FROM ideas WHERE stream = $1', [stream]);
+    return result.rows;
+  } catch (error) {
+    throw error;
+  }
+};
 
-module.exports = { getProjects,getFilteredJobDetails,getJobDetails,getIdeas};
+const getJobDetailsPage = async (page, pageSize) => {
+  try {
+    const offset = (page - 1) * pageSize;
+    const queryText = `SELECT * FROM jobdetails LIMIT ${pageSize} OFFSET ${offset}`;
+
+    const result = await db.query(queryText);
+    return result.rows;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error fetching job details');
+  }
+};
+
+module.exports = { getProjects,getFilteredJobDetails,getJobDetails,getIdeas,getIdeasByStream,getJobDetailsPage};
