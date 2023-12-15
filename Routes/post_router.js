@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { registerUser, loginUser } = require('../Authorization/auth');
 const verifyToken = require('../Authorization/verifyToken');
-const { addAdditionalInfo,addprojects,scheduleInterview ,addjobDetails,addIdeas} = require('../functions/post');
+const { addAdditionalInfo,addprojects,scheduleInterview ,addjobDetails,addIdeas,bookmarkJob} = require('../functions/post');
 const drive= require('../Config/gDriveConfig')
 const multer = require('multer');
 const storage = multer.memoryStorage(); 
@@ -137,5 +137,18 @@ router.post('/ideas',async(req,res)=>{
   }
 })
 
+router.post('/bookmark/:jobId', async (req, res) => {
+  try {
+    const userId = 13; // Assuming you have user information in req.user
+    const jobId = req.params.jobId;
+
+    const result = await bookmarkJob(userId, jobId);
+
+    res.status(200).json(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, error: 'Internal server error' });
+  }
+});
 
 module.exports = router

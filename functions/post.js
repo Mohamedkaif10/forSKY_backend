@@ -82,4 +82,23 @@ const addIdeas = async(userID,title,stream,content)=>{
         throw new Error('Interal Server Error')
     }
 }
-module.exports = { addAdditionalInfo ,addprojects,scheduleInterview, addjobDetails,addIdeas};
+
+const bookmarkJob = async (userId, jobId) => {
+  try {
+    // Check if the bookmark already exists
+    const existingBookmark = await db.query('SELECT * FROM bookmarks WHERE user_id = $1 AND job_id = $2', [userId, jobId]);
+
+    if (existingBookmark.rows.length === 0) {
+      // Bookmark the job if it doesn't exist in bookmarks table
+      await db.query('INSERT INTO bookmarks (user_id, job_id) VALUES ($1, $2)', [userId, jobId]);
+      return { success: true, message: 'Job bookmarked successfully' };
+    } else {
+      return { success: false, message: 'Job is already bookmarked' };
+    }
+  } catch (error) {
+    console.error(error);
+    throw new Error('Internal server error');
+  }
+};
+
+module.exports = { addAdditionalInfo ,addprojects,scheduleInterview, addjobDetails,addIdeas,bookmarkJob};

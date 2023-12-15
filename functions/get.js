@@ -88,4 +88,14 @@ const getJobDetailsPage = async (page, pageSize) => {
   }
 };
 
-module.exports = { getProjects,getFilteredJobDetails,getJobDetails,getIdeas,getIdeasByStream,getJobDetailsPage};
+const getBookmarks = async (userId) => {
+  try {
+    const bookmarks = await db.query('SELECT jobdetails.* FROM jobdetails JOIN bookmarks ON jobdetails.job_id = bookmarks.job_id WHERE bookmarks.user_id = $1', [userId]);
+    return bookmarks.rows;
+  } catch (error) {
+    console.error('Error fetching bookmarks:', error);
+    throw error;
+  }
+};
+
+module.exports = { getProjects,getFilteredJobDetails,getJobDetails,getIdeas,getIdeasByStream,getJobDetailsPage,getBookmarks};

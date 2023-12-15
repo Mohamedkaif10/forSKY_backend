@@ -87,6 +87,12 @@ CREATE TABLE ideas (
   user_id INT NOT NULL,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
-
+CREATE TABLE IF NOT EXISTS bookmarks (
+  id SERIAL PRIMARY KEY,
+  user_id INT NOT NULL,
+  job_id INT NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users(id),
+  FOREIGN KEY (job_id) REFERENCES jobdetails(job_id)
+);
 
 

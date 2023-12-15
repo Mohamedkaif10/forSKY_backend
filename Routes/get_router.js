@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const verifyToken = require('../Authorization/verifyToken');
-const { getProjects,getFilteredJobDetails,getJobDetails,getIdeas,getIdeasByStream,getJobDetailsPage} = require('../functions/get');
+const { getProjects,getFilteredJobDetails,getJobDetails,getIdeas,getIdeasByStream,getJobDetailsPage,getBookmarks} = require('../functions/get');
 const db = require('../Config/dbConnection');
 
 router.get('/get_job', async (req, res) => {
@@ -100,6 +100,16 @@ router.get('/job-details/:userId', async (req, res) => {
       res.status(500).json({ error: 'Internal server error' });
     }
   });
-
+  router.get('/bookmarks', async (req, res) => {
+    try {
+      const userId = 13; // Assuming you have user information in req.user
+      const bookmarks = await getBookmarks(userId);
+  
+      res.json({ success: true, bookmarks });
+    } catch (error) {
+      console.error('Error in GET /bookmarks:', error);
+      res.status(500).json({ success: false, error: 'Internal server error' });
+    }
+  });
 
 module.exports = router;
