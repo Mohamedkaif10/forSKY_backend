@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const verifyToken = require('../Authorization/verifyToken');
 const { getProjects,getFilteredJobDetails,getJobDetails,getIdeas,getIdeasByStream,getJobDetailsPage,getBookmarks} = require('../functions/get');
-const db = require('../Config/dbConnection');
 
 router.get('/get_job', async (req, res) => {
   try {
