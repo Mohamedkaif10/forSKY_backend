@@ -47,25 +47,35 @@ const sendOTP = async (req, res) => {
     }
   };
   const updatePassword = async (req, res) => {
-    const { email, newPassword } = req.body;
+    const userId = req.user.id; // Assuming you have a user ID in your session
+    const { newPassword } = req.body;
   
     try {
-      // Hash the new password before updating it in the database
-      const hashedPassword = await bcrypt.hash(newPassword, 10);
+      // Check if the OTP is valid
+      const otpVerificationQuery = 'SELECT * FROM otps WHERE user_id = $1';
+      const otpVerificationResult = await pool.query(otpVerificationQuery, [userId]);
   
-      // Update user password in the database
-      const updatePasswordQuery = 'UPDATE users SET password = $1 WHERE email = $2';
-      await db.query(updatePasswordQuery, [hashedPassword, email]);
+      if (otpVerificationResult.rows.length > 0) {
+        // Hash the new password before updating it in the database
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
   
-      // Remove the used OTP from the database
-      const deleteOtpQuery = 'DELETE FROM otps WHERE email = $1';
-      await db.query(deleteOtpQuery, [email]);
+        // Update user password in the database
+        const updatePasswordQuery = 'UPDATE users SET password = $1 WHERE id = $2';
+        await pool.query(updatePasswordQuery, [hashedPassword, userId]);
   
-      res.status(200).json({ message: 'Password updated successfully' });
+        // Remove the used OTP from the database
+        const deleteOtpQuery = 'DELETE FROM otps WHERE user_id = $1';
+        await pool.query(deleteOtpQuery, [userId]);
+  
+        res.status(200).json({ message: 'Password updated successfully' });
+      } else {
+        res.status(400).json({ error: 'Invalid or expired OTP' });
+      }
     } catch (error) {
       console.error('Error updating password:', error);
       res.status(500).json({ error: 'Internal Server Error' });
     }
   };
+  
   
   module.exports={sendOTP, verifyOTP,updatePassword}

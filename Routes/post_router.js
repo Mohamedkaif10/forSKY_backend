@@ -10,7 +10,7 @@ const fs = require('fs');
 const stream = require('stream');
 const db = require('../Config/dbConnection');
 const path = require('path');
-const {sendOTP,verifyOTP,updatePassword} = require('../functions/otp')
+const {sendOTP,verifyOTP} = require('../functions/otp')
 const upload = multer({ storage: storage });
 router.post('/register', async (req, res) => {
     const { firstname, lastname,  password, email, phone_no } = req.body;
@@ -152,5 +152,4 @@ router.post('/bookmark/:jobId', async (req, res) => {
 });
 router.post('/send-otp', sendOTP);
 router.post('/verify-otp', verifyOTP);
-router.put('/update-password',updatePassword)
 module.exports = router
