@@ -47,25 +47,24 @@ const sendOTP = async (req, res) => {
     }
   };
   const updatePassword = async (req, res) => {
-    const userId = req.user.id; // Assuming you have a user ID in your session
-    const { newPassword } = req.body;
+    const { email, newPassword } = req.body;
   
     try {
       // Check if the OTP is valid
-      const otpVerificationQuery = 'SELECT * FROM otps WHERE user_id = $1';
-      const otpVerificationResult = await pool.query(otpVerificationQuery, [userId]);
+      const otpVerificationQuery = 'SELECT * FROM otps WHERE email = $1';
+      const otpVerificationResult = await db.query(otpVerificationQuery, [email]);
   
       if (otpVerificationResult.rows.length > 0) {
         // Hash the new password before updating it in the database
         const hashedPassword = await bcrypt.hash(newPassword, 10);
   
         // Update user password in the database
-        const updatePasswordQuery = 'UPDATE users SET password = $1 WHERE id = $2';
-        await pool.query(updatePasswordQuery, [hashedPassword, userId]);
+        const updatePasswordQuery = 'UPDATE users SET password = $1 WHERE email = $2';
+        await db.query(updatePasswordQuery, [hashedPassword, email]);
   
         // Remove the used OTP from the database
-        const deleteOtpQuery = 'DELETE FROM otps WHERE user_id = $1';
-        await pool.query(deleteOtpQuery, [userId]);
+        const deleteOtpQuery = 'DELETE FROM otps WHERE email = $1';
+        await db.query(deleteOtpQuery, [email]);
   
         res.status(200).json({ message: 'Password updated successfully' });
       } else {
