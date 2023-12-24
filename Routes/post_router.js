@@ -86,7 +86,7 @@ router.post('/login', async (req, res) => {
     console.log(req.body)
     try {
      
-      const { dept_name, job_title, stipend_amount, last_date, vacancies, location, scholar_link, duration, description } = req.body;
+      const { dept_name, job_title, stipend_amount, last_date, vacancies, location, scholar_link, duration, description,institute } = req.body;
       const userId = req.user.id;
       const pdf_name = req.file.originalname;
       const serverFilePath = path.join(__dirname, '../pdfs', pdf_name);
@@ -114,7 +114,7 @@ router.post('/login', async (req, res) => {
   
       const pdfId = driveRes.data.id;
   
-      await addjobDetails(userId, dept_name, job_title, stipend_amount, last_date, vacancies, location, scholar_link, duration, description, pdf_name, pdfId);
+      await addjobDetails(userId, dept_name, job_title, stipend_amount, last_date, vacancies, location, scholar_link, duration, description, pdf_name, pdfId,institute);
   
       fs.unlinkSync(serverFilePath);
   
@@ -152,4 +152,6 @@ router.post('/bookmark/:jobId', async (req, res) => {
 });
 router.post('/send-otp', sendOTP);
 router.post('/verify-otp', verifyOTP);
+
+
 module.exports = router

@@ -12,5 +12,4 @@ const drive = google.drive({
     ['https://www.googleapis.com/auth/drive']
   ),
 });
-
 module.exports = drive;

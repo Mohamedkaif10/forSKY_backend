@@ -5,3 +5,5 @@ forsky_credentials.json
 token.json
 uploads
 pdfs
+images
+docker-compose.yaml

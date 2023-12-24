@@ -95,4 +95,32 @@ CREATE TABLE IF NOT EXISTS bookmarks (
   FOREIGN KEY (job_id) REFERENCES jobdetails(job_id)
 );
 
+CREATE TABLE IF NOT EXISTS screenshots (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    image_name VARCHAR(255) NOT NULL,
+    image_id VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+);
+Artificial Intelligence
+Biomedical Engineering
+Biotechnology
+Chemical Engineering
+Climate Change
+Civil Engineering
+Computer Science and Engineering
+Electrical Engineering
+Engineering Science
+Heritage Science and Technology
+Materials Science & Metallurgical...
+Mechanical & Aerospace Engineering
+Liberal Arts
+Design
+Entrepreneurship and Management
+Chemistry
+Physics
+Mathematics
+
+
 

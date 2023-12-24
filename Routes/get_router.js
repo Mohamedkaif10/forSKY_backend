@@ -1,8 +1,28 @@
 const express = require('express');
 const router = express.Router();
 const verifyToken = require('../Authorization/verifyToken');
-const { getProjects,getFilteredJobDetails,getJobDetails,getIdeas,getIdeasByStream,getJobDetailsPage,getBookmarks} = require('../functions/get');
+const { getProjects,getFilteredJobDetails,getJobDetails,getIdeas,getIdeasByStream,getJobDetailsPage,getBookmarks,searchJobs,getIdeaById} = require('../functions/get');
+const db=require('../Config/dbConnection')
+router.get('/subjects', async (req, res) => {
+  try {
+    const result = await db.query('SELECT * FROM subjects ORDER BY name;');
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error getting subjects:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
+router.get('/departments/:subjectId', async (req, res) => {
+  const { subjectId } = req.params;
+  try {
+    const result = await db.query('SELECT * FROM departments WHERE subject_id = $1', [subjectId]);
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error getting departments:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 router.get('/get_job', async (req, res) => {
   try {
     const page = parseInt(req.query.page, 10) || 1;
@@ -25,6 +45,22 @@ router.get('/get-ideas',async(req,res)=>{
     res.status(500).send('Internal Server Error');
   }
 })
+router.get('/get-ideas/:id', async (req, res) => {
+  const ideaId = req.params.id;
+
+  try {
+    const idea = await getIdeaById(ideaId);
+
+    if (idea) {
+      res.json({ success: true, idea });
+    } else {
+      res.status(404).json({ error: 'Idea not found' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+});
 router.get('/user-profile', verifyToken, async (req, res) => {
   try {
     // Assuming req.user contains the user information, including firstname
@@ -110,5 +146,28 @@ router.get('/job-details/:userId', async (req, res) => {
       res.status(500).json({ success: false, error: 'Internal server error' });
     }
   });
+
+  router.get('/search', async (req, res) => {
+    const { location, department_name } = req.query;
+
+    // Validate that both location and department_name are provided
+    if (!location && !department_name) {
+        return res.status(400).json({ error: 'Both location and department_name are required.' });
+    }
+
+    try {
+        const jobs = await searchJobs(location, department_name);
+
+        // Check if the result array is empty
+        if (jobs.length === 0) {
+            return res.status(404).json({ error: 'No matching jobs found.' });
+        }
+
+        res.json(jobs);
+    } catch (error) {
+        console.error('Error executing query', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
 
 module.exports = router;

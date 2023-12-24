@@ -66,6 +66,20 @@ const getIdeas = async()=>{
     throw new Error('Error fetching ideas');
   }
 }
+const getIdeaById = async (id) => {
+  try {
+    const result = await db.query(
+      'SELECT * FROM ideas WHERE id = $1',
+      [id]
+    );
+
+    const idea = result.rows[0];
+    return idea;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error fetching idea by ID');
+  }
+};
 const getIdeasByStream = async (stream) => {
   try {
     const result = await db.query('SELECT * FROM ideas WHERE stream = $1', [stream]);
@@ -98,4 +112,17 @@ const getBookmarks = async (userId) => {
   }
 };
 
-module.exports = { getProjects,getFilteredJobDetails,getJobDetails,getIdeas,getIdeasByStream,getJobDetailsPage,getBookmarks};
+async function searchJobs(location, department_name) {
+  let query = 'SELECT * FROM jobdetails WHERE location ILIKE $1';
+  const params = [`%${location}%`];
+
+  if (department_name) {
+      query += ' AND department_name ILIKE $2';
+      params.push(`%${department_name}%`);
+  }
+
+  const result = await db.query(query, params);
+  return result.rows;
+}
+
+module.exports = { getProjects,getFilteredJobDetails,getJobDetails,getIdeas,getIdeasByStream,getJobDetailsPage,getBookmarks,searchJobs,getIdeaById};
