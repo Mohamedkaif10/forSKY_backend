@@ -125,4 +125,13 @@ async function searchJobs(location, department_name) {
   return result.rows;
 }
 
-module.exports = { getProjects,getFilteredJobDetails,getJobDetails,getIdeas,getIdeasByStream,getJobDetailsPage,getBookmarks,searchJobs,getIdeaById};
+const getUserProfile = async (userId) => {
+  try {
+    const result = await pool.query('SELECT * FROM user_profiles WHERE user_id = $1', [userId]);
+    return result.rows[0];
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+    throw error;
+  }
+};
+module.exports = { getProjects,getFilteredJobDetails,getJobDetails,getIdeas,getIdeasByStream,getJobDetailsPage,getBookmarks,searchJobs,getIdeaById,getUserProfile};

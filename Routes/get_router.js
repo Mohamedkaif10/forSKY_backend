@@ -3,6 +3,7 @@ const router = express.Router();
 const verifyToken = require('../Authorization/verifyToken');
 const { getProjects,getFilteredJobDetails,getJobDetails,getIdeas,getIdeasByStream,getJobDetailsPage,getBookmarks,searchJobs,getIdeaById} = require('../functions/get');
 const db=require('../Config/dbConnection')
+
 router.get('/subjects', async (req, res) => {
   try {
     const result = await db.query('SELECT * FROM subjects ORDER BY name;');

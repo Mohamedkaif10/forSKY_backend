@@ -103,24 +103,19 @@ CREATE TABLE IF NOT EXISTS screenshots (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id),
 );
-Artificial Intelligence
-Biomedical Engineering
-Biotechnology
-Chemical Engineering
-Climate Change
-Civil Engineering
-Computer Science and Engineering
-Electrical Engineering
-Engineering Science
-Heritage Science and Technology
-Materials Science & Metallurgical...
-Mechanical & Aerospace Engineering
-Liberal Arts
-Design
-Entrepreneurship and Management
-Chemistry
-Physics
-Mathematics
-
+CREATE TABLE user_profiles (
+  id SERIAL PRIMARY KEY,
+  full_name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  mobile_number VARCHAR(20) NOT NULL,
+  work_status VARCHAR(50) NOT NULL,
+  present_location VARCHAR(255),
+  description TEXT,
+  user_id INTEGER NOT NULL,
+  profile_completed BOOL DEFAULT FALSE,
+  FOREIGN KEY (user_id) REFERENCES users(id),
+  CONSTRAINT email_unique UNIQUE (email),
+  CONSTRAINT mobile_number_unique UNIQUE (mobile_number)
+);
 
 

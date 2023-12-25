@@ -111,8 +111,40 @@ async function addImage(userId, imageName, imageId) {
     throw error;
   }
 }
+const getUserProfile = async (userId) => {
+  try {
+    const result = await db.query('SELECT * FROM user_profiles WHERE user_id = $1', [userId]);
+    return result.rows[0];
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+    throw error;
+  }
+};
+
+const createUserProfile = async (profileData) => {
+  const {
+    full_name,
+    email,
+    mobile_number,
+    work_status,
+    present_location,
+    description,
+    user_id,
+  } = profileData;
+
+  try {
+    const result = await db.query(
+      'INSERT INTO user_profiles (full_name, email, mobile_number, work_status, present_location, description, user_id, profile_completed) VALUES ($1, $2, $3, $4, $5, $6, $7, TRUE) RETURNING *',
+      [full_name, email, mobile_number, work_status, present_location, description, user_id]
+    );
+
+    return result.rows[0];
+  } catch (error) {
+    console.error('Error creating user profile:', error);
+    throw error;
+  }
+};
 
 
 
-
-module.exports = { addAdditionalInfo ,addprojects,scheduleInterview, addjobDetails,addIdeas,bookmarkJob,addImage};
+module.exports = { addAdditionalInfo ,addprojects,scheduleInterview, addjobDetails,addIdeas,bookmarkJob,addImage,createUserProfile,getUserProfile};

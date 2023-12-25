@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { registerUser, loginUser } = require('../Authorization/auth');
 const verifyToken = require('../Authorization/verifyToken');
-const { addAdditionalInfo,addprojects,scheduleInterview ,addjobDetails,addIdeas,bookmarkJob} = require('../functions/post');
+const { addAdditionalInfo,addprojects,scheduleInterview ,addjobDetails,addIdeas,bookmarkJob,createUserProfile,getUserProfile} = require('../functions/post');
 const drive= require('../Config/gDriveConfig')
 const multer = require('multer');
 const storage = multer.memoryStorage(); 
@@ -152,6 +152,36 @@ router.post('/bookmark/:jobId', async (req, res) => {
 });
 router.post('/send-otp', sendOTP);
 router.post('/verify-otp', verifyOTP);
+// router.post('/create-profile', async (req, res) => {
+//   try {
+//     const { full_name, email, mobile_number, work_status, present_location, description } = req.body;
 
+//     // Extract user_id from the authenticated user
+//     const user_id =17;
+
+//     // Check if the user has already completed their profile
+//     const existingProfile = await getUserProfile(user_id);
+
+//     if (existingProfile) {
+//       return res.status(400).json({ error: 'User profile already exists.' });
+//     }
+
+//     // Insert the new profile
+//     const newProfile = await createUserProfile({
+//       full_name,
+//       email,
+//       mobile_number,
+//       work_status,
+//       present_location,
+//       description,
+//       user_id,
+//     });
+
+//     res.json({ success: true, profile: newProfile });
+//   } catch (error) {
+//     console.error('Error creating user profile:', error);
+//     res.status(500).json({ error: 'Internal server error' });
+//   }
+// });
 
 module.exports = router

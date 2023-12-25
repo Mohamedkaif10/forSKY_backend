@@ -8,6 +8,7 @@ const payment_route=require('./Routes/payment_route')
 const delete_router=require('./Routes/delete_router')
 const put_router=require('./Routes/put_router')
 const drive_router= require('./Routes/GdriveRoute')
+const aws_router=require('./Routes/awsRoute')
 const app = express();
 const cors = require("cors");
 const session = require('express-session');
@@ -29,6 +30,7 @@ app.use('/',googleAuth);
 app.use('/api',put_router)
 app.use('/',payment_route)
 app.use('/api',drive_router)
+app.use('/api',aws_router)
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
