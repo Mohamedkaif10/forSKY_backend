@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 const { Router } = require('express');
 const multer = require('multer');
 const sharp = require("sharp");
+const verifyToken = require("../Authorization/verifyToken");
 const router = Router();
 const db= require('../Config/dbConnection')
 dotenv.config();
@@ -26,12 +27,12 @@ const upload = multer({
   },
 });
 
-router.post('/create-profile', upload.single('image'), async (req, res) => {
+router.post('/create-profile',verifyToken, upload.single('image'), async (req, res) => {
   try {
     const { full_name, email, mobile_number, work_status, present_location, description } = req.body;
 
     // Extract user_id from the authenticated user
-    const user_id = 1;
+    const user_id =req.user.id;
 
     // Check if the user has already completed their profile
     const profileCheck = await db.query('SELECT * FROM user_profiles WHERE user_id = $1', [user_id]);
@@ -71,10 +72,10 @@ router.post('/create-profile', upload.single('image'), async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-router.get('/user-profile', async (req, res) => {
+router.get('/user-profile',verifyToken, async (req, res) => {
   try {
     // Extract user_id from the authenticated user
-    const user_id = 1;  // Change this to extract user_id from your authentication mechanism
+    const user_id = req.user.id;  // Change this to extract user_id from your authentication mechanism
 
     // Retrieve the user profile
     const profileResult = await db.query('SELECT * FROM user_profiles WHERE user_id = $1', [user_id]);
@@ -91,10 +92,10 @@ router.get('/user-profile', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-router.get('/user-profile-image', async (req, res) => {
+router.get('/user-profile-image',verifyToken, async (req, res) => {
   try {
     // Extract user_id from the authenticated user
-    const user_id = 1;  // Change this to extract user_id from your authentication mechanism
+    const user_id = req.user.id;  // Change this to extract user_id from your authentication mechanism
 
     // Retrieve the user profile
     const profileResult = await db.query('SELECT image_url FROM user_profiles WHERE user_id = $1', [user_id]);

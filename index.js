@@ -4,7 +4,6 @@ const routes = require('./Routes/post_router');
 const getroutes =require('./Routes/get_router');
 const googleAuth = require('./Routes/googleRoute')
 const passport =require('./Config/passport-config');
-const payment_route=require('./Routes/payment_route')
 const delete_router=require('./Routes/delete_router')
 const put_router=require('./Routes/put_router')
 const drive_router= require('./Routes/GdriveRoute')
@@ -19,7 +18,7 @@ app.use(session({ secret: secret, resave: true, saveUninitialized: true }));
 app.use(bodyParser.json());
 const corsOptions = {
   origin: "http://localhost:5173",
-  credentials: true, // Allow credentials (cookies, HTTP authentication)
+  credentials: true, 
 };
 app.use(cors(corsOptions));
 passport.initialize()
@@ -28,7 +27,6 @@ app.use('/api',getroutes);
 app.use('/api',delete_router)
 app.use('/',googleAuth);
 app.use('/api',put_router)
-app.use('/',payment_route)
 app.use('/api',drive_router)
 app.use('/api',aws_router)
 app.listen(PORT, () => {

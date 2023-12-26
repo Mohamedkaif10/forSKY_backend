@@ -5,9 +5,9 @@ const verifyToken = require('../Authorization/verifyToken');
 const {unbookmarkJob}= require('../functions/delete')
 
 
-router.delete('/bookmark/:jobId', async (req, res) => {
+router.delete('/bookmark/:jobId',verifyToken, async (req, res) => {
     try {
-      const userId = 13; // Assuming you have user information in req.user
+      const userId = req.user.id; // Assuming you have user information in req.user
       const jobId = req.params.jobId;
   
       const result = await unbookmarkJob(userId, jobId);

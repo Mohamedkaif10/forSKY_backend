@@ -64,7 +64,6 @@ router.get('/get-ideas/:id', async (req, res) => {
 });
 router.get('/user-profile', verifyToken, async (req, res) => {
   try {
-    // Assuming req.user contains the user information, including firstname
     console.log('User information:', req.user);
 
     const { firstname } = req.user;
@@ -105,7 +104,7 @@ router.get('/filtered-job-details', async (req, res) => {
   }
 });
 
-router.get('/job-details/:userId', async (req, res) => {
+router.get('/job-details/:userId',verifyToken, async (req, res) => {
     try {
       const userId = req.params.userId;
   
@@ -136,9 +135,9 @@ router.get('/job-details/:userId', async (req, res) => {
       res.status(500).json({ error: 'Internal server error' });
     }
   });
-  router.get('/bookmarks', async (req, res) => {
+  router.get('/bookmarks', verifyToken,async (req, res) => {
     try {
-      const userId = 13; // Assuming you have user information in req.user
+      const userId = req.user.id; // Assuming you have user information in req.user
       const bookmarks = await getBookmarks(userId);
   
       res.json({ success: true, bookmarks });
@@ -169,6 +168,24 @@ router.get('/job-details/:userId', async (req, res) => {
         console.error('Error executing query', error);
         res.status(500).send('Internal Server Error');
     }
+});
+router.get('/check-profile',verifyToken, async (req, res) => {
+  try {
+   
+    const user_id = req.user.id; 
+    const profileCheck = await db.query('SELECT profile_completed FROM user_profiles WHERE user_id = $1', [user_id]);
+
+    if (profileCheck.rows.length === 0) {
+      return res.status(404).json({ error: 'User profile not found.' });
+    }
+
+    const isProfileCompleted = profileCheck.rows[0].profile_completed;
+
+    res.json({ profile_completed: isProfileCompleted });
+  } catch (error) {
+    console.error('Error checking profile status:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
 module.exports = router;

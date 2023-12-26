@@ -2,13 +2,13 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const router = express.Router();
-const  drive = require('../Config/gDriveConfig'); // Assuming you have a separate module for Google Drive logic
+const  drive = require('../Config/gDriveConfig');
 const multer = require('multer');
 const db = require('../Config/dbConnection');
 const stream = require('stream');
 const storage = multer.memoryStorage(); 
-const {addImage}= require('../functions/post')
-// Multer configuration for handling file uploads
+const {addImage}= require('../functions/post');
+const verifyToken = require('../Authorization/verifyToken');
 const upload = multer({ storage: storage });
 
 
@@ -52,10 +52,7 @@ router.post('/screenshot',  upload.single('image'), async (req, res) => {
       });
   
       console.log('Google Drive API Response:', driveRes);
-  
       const imageId = driveRes.data.id;
-  
-      // Add your database insertion logic here
       await addImage(userId, imageName, imageId);
       fs.unlinkSync(serverFilePath);
   

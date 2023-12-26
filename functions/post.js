@@ -52,7 +52,7 @@ const scheduleInterview = async (userID, date_interview, from_time, link) => {
  
 const addjobDetails = async (userID, dept_name, job_title, stipend_amount, last_date, vacancies, location, scholar_link, duration, description, pdf_name, pdf_id,institute) => {
   try {
-    const insertResult = await db.query('INSERT INTO jobdetails(user_id,department_name,job_title,stipend_amount,last_date,vacancies,location,scholar_link,duration,description,pdf_name,pdf_id,institute) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)',
+    const insertResult = await db.query('INSERT INTO jobdetails(user_id,department_name,job_title,stipend_amount,last_date,vacancies,location,scholar_link,duration,description,pdf_name,pdf_id,institute) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)',
       [userID, dept_name, job_title, stipend_amount, last_date, vacancies, location, scholar_link, duration, description, pdf_name, pdf_id,institute]
     );
 
