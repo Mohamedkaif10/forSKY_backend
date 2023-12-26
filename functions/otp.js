@@ -1,6 +1,7 @@
 const {generateOTP, sendEmail}= require('./mail')
 const db = require('../Config/dbConnection');
-const bcrypt = require('bcrypt');
+
+const crypto = require('crypto');
 const sendOTP = async (req, res) => {
     const { email } = req.body;
   
@@ -46,6 +47,7 @@ const sendOTP = async (req, res) => {
       res.status(500).json({ error: 'Internal Server Error' });
     }
   };
+
   const updatePassword = async (req, res) => {
     const { email, newPassword } = req.body;
   
@@ -56,7 +58,8 @@ const sendOTP = async (req, res) => {
   
       if (otpVerificationResult.rows.length > 0) {
         // Hash the new password before updating it in the database
-        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        // Using crypto to hash the password
+        const hashedPassword = crypto.createHmac('sha256', process.env.secretKey).update(newPassword).digest('hex');
   
         // Update user password in the database
         const updatePasswordQuery = 'UPDATE users SET password = $1 WHERE email = $2';
