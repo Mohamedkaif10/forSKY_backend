@@ -2,7 +2,6 @@ const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
 const dotenv = require('dotenv');
 const { Router } = require('express');
 const multer = require('multer');
-const sharp = require("sharp");
 const verifyToken = require("../Authorization/verifyToken");
 const router = Router();
 const db= require('../Config/dbConnection')
