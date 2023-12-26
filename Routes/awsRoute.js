@@ -6,6 +6,7 @@ const sharp = require("sharp");
 const verifyToken = require("../Authorization/verifyToken");
 const router = Router();
 const db= require('../Config/dbConnection')
+const Jimp = require('jimp');
 dotenv.config();
 
 const bucketName = process.env.BUCKET_NAME;
@@ -46,8 +47,17 @@ router.post('/create-profile',verifyToken, upload.single('image'), async (req, r
       return res.status(400).json({ error: 'Image file is required.' });
     }
 
-    const buffer = await sharp(req.file.buffer).resize({ height: 100, width: 200, fit: "contain" }).toBuffer();
-
+    const buffer = await Jimp.read(req.file.buffer)
+  .then(image => {
+    // Resize the image
+    return image.resize(200, 100)
+                .quality(90)   
+                .getBufferAsync(Jimp.AUTO);
+  })
+  .catch(error => {
+    console.error('Error processing image with Jimp:', error);
+    throw error;
+  });
     const params = {
       Bucket: bucketName,
       Key: req.file.originalname,
