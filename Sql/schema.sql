@@ -119,3 +119,41 @@ CREATE TABLE user_profiles (
 );
 
 
+CREATE TABLE subjects (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE departments (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  subject_id INT,
+  FOREIGN KEY (subject_id) REFERENCES subjects(id)
+);
+
+-- Assuming the subject_id for "Chemistry" is 4
+INSERT INTO departments (name, subject_id) VALUES
+('Organic chemistry', 4),
+('Analytical chemistry', 4),
+('Inorganic chemistry', 4),
+('Biochemistry', 4),
+('Medicinal chemistry', 4),
+('Physical chemistry', 4),
+('Chemical biology', 4),
+('Environmental chemistry', 4),
+('Computational chemistry', 4),
+('Materials Science', 4),
+('Theoretical chemistry', 4),
+('Biology', 4),
+('Catalysis', 4),
+('Solid-state chemistry', 4),
+('Nanotechnology', 4),
+('Bioinorganic chemistry', 4),
+('Green chemistry', 4),
+('Chemistry education', 4),
+('Spectroscopy', 4),
+('Polymer chemistry', 4),
+('Organometallic chemistry', 4),
+('Electrochemistry', 4),
+('Supramolecular chemistry', 4),
+('Atmospheric chemistry', 4);
