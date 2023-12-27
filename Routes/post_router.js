@@ -38,50 +38,45 @@ router.post('/login', async (req, res) => {
   }
 });
 
-  router.post('/job-details', verifyToken, upload.single('pdf'), async (req, res) => {
-    console.log("the ",req.file); 
-    console.log(req.body)
-    try {
-     
-      const { dept_name, job_title, stipend_amount, last_date, vacancies, location, scholar_link, duration, description,institute } = req.body;
-      const userId = req.user.id;
-      const pdf_name = req.file.originalname;
-      const serverFilePath = path.join(__dirname, '../tmp', pdf_name);
-  
-      fs.writeFileSync(serverFilePath, req.file.buffer);
-  
-      const fileMetadata = {
-        name: pdf_name,
-        parents: ['1kcGDybGowsIlhR7ELUHjPUrZji1ckH32'],
-      };
-  
-      const bufferStream = new stream.PassThrough();
-      bufferStream.end(req.file.buffer);
-  
-      const media = {
-        mimeType: 'application/pdf',
-        body: bufferStream,
-      };
-  
-      const driveRes = await drive.files.create({
-        resource: fileMetadata,
-        media: media,
-        fields: 'id',
-      });
-  
-      const pdfId = driveRes.data.id;
-  
-      await addjobDetails(userId, dept_name, job_title, stipend_amount, last_date, vacancies, location, scholar_link, duration, description, pdf_name, pdfId,institute);
-  
-      fs.unlinkSync(serverFilePath);
-  
-      res.json({ success: true, message: 'Job details added', pdfId });
-      res.status(200)
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: error.message });
-    }
-  });
+router.post('/job-details', verifyToken, upload.single('pdf'), async (req, res) => {
+  console.log("the ", req.file);
+  console.log(req.body);
+
+  try {
+    const { dept_name, job_title, stipend_amount, last_date, vacancies, location, scholar_link, duration, description, institute } = req.body;
+    const userId = req.user.id;
+    const pdf_name = req.file.originalname;
+
+    const fileMetadata = {
+      name: pdf_name,
+      parents: ['1kcGDybGowsIlhR7ELUHjPUrZji1ckH32'],
+    };
+
+    const bufferStream = new stream.PassThrough();
+    bufferStream.end(req.file.buffer);
+
+    const media = {
+      mimeType: 'application/pdf',
+      body: bufferStream,
+    };
+
+    const driveRes = await drive.files.create({
+      resource: fileMetadata,
+      media: media,
+      fields: 'id',
+    });
+
+    const pdfId = driveRes.data.id;
+
+    await addjobDetails(userId, dept_name, job_title, stipend_amount, last_date, vacancies, location, scholar_link, duration, description, pdf_name, pdfId, institute);
+
+    res.json({ success: true, message: 'Job details added', pdfId });
+    res.status(200);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+});
 router.post('/ideas',verifyToken,async(req,res)=>{
   try{
     const{title,stream,content}=req.body;
