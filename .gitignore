@@ -3,6 +3,4 @@ package-lock.json
 .env
 token.json
 uploads
-pdfs
-images
 docker-compose.yaml
