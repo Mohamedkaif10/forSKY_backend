@@ -8,11 +8,13 @@ DROP SEQUENCE IF EXISTS projects_id_seq;
 CREATE SEQUENCE projects_id_seq;
 CREATE TABLE IF NOT EXISTS users (
   id SERIAL PRIMARY KEY,
-  firstname VARCHAR(255) NOT NULL,
-  lastname VARCHAR(255) NOT NULL,
-  password VARCHAR(255) NOT NULL,
-  email VARCHAR(255) NOT NULL,
-  phone_no VARCHAR(20) NOT NULL
+  firstname VARCHAR(255) ,
+  lastname VARCHAR(255),
+  password VARCHAR(255),
+  email VARCHAR(255),
+  phone_no VARCHAR(20),
+  google_id VARCHAR(50),
+  display_name VARCHAR(50)
 );
 CREATE TABLE IF NOT EXISTS additional (
   id SERIAL PRIMARY KEY,
@@ -62,7 +64,7 @@ CREATE TABLE IF NOT EXISTS jobDetails (
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 CREATE TABLE  IF NOT EXISTS jobdetails(
-  id SERIAL PRIMARY KEY,
+  job_id SERIAL PRIMARY KEY,
   user_id INT NOT NULL,
   department_name VARCHAR(255) NOT NULL,
   job_title VARCHAR(255) NOT NULL,
@@ -75,6 +77,7 @@ CREATE TABLE  IF NOT EXISTS jobdetails(
   description TEXT NOT NULL,
   pdf_name VARCHAR(255),
   pdf_id VARCHAR(255),
+  institute VARCHAR(255) NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
@@ -113,6 +116,7 @@ CREATE TABLE user_profiles (
   description TEXT,
   user_id INTEGER NOT NULL,
   profile_completed BOOL DEFAULT FALSE,
+  image_url TEXT NOT NULL,
   FOREIGN KEY (user_id) REFERENCES users(id),
   CONSTRAINT email_unique UNIQUE (email),
   CONSTRAINT mobile_number_unique UNIQUE (mobile_number)
@@ -130,5 +134,10 @@ CREATE TABLE departments (
   subject_id INT,
   FOREIGN KEY (subject_id) REFERENCES subjects(id)
 );
-
+CREATE TABLE otps (
+  email VARCHAR(50) NOT NULL,
+  otp VARCHAR(20) NOT NULL,
+  user_id INT NOT NULL,
+   FOREIGN KEY (user_id) REFERENCES users(id)
+);
 -- Assuming the subject_id for "Chemistry" is 4
