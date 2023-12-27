@@ -46,7 +46,7 @@ router.post('/login', async (req, res) => {
       const { dept_name, job_title, stipend_amount, last_date, vacancies, location, scholar_link, duration, description,institute } = req.body;
       const userId = req.user.id;
       const pdf_name = req.file.originalname;
-      const serverFilePath = path.join(__dirname, '../pdfs', pdf_name);
+      const serverFilePath = path.join(__dirname, '../tmp', pdf_name);
   
       fs.writeFileSync(serverFilePath, req.file.buffer);
   
