@@ -17,7 +17,7 @@ const secret = process.env.secretKey
 app.use(session({ secret: secret, resave: true, saveUninitialized: true }));
 app.use(bodyParser.json());
 const corsOptions = {
-  origin: "http://localhost:5173",
+  origin: "https://forsync.vercel.app",
   credentials: true, 
 };
 app.use(cors(corsOptions));
