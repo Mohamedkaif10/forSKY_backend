@@ -5,7 +5,7 @@ const verifyToken = (req, res, next) => {
   const token = req.header('Authorization');
   if (!token) return res.status(403).send('Access denied.');
 
-  jwt.verify(token, secretKey, (err, user) => {
+  jwt.verify(token, secretKey,{ expiresIn: '20m' }, (err, user) => {
     if (err) {
       console.error('Error verifying token:', err);
       return res.status(403).send('Invalid Token');

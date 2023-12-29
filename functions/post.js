@@ -1,5 +1,6 @@
 // post.js
-
+const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
+const dotenv = require('dotenv');
 const db = require('../Config/dbConnection'); // Import your database connection module
 
 const addAdditionalInfo = async (userId, department, specialization, researchAreas) => {
@@ -69,11 +70,12 @@ const addjobDetails = async (userID, dept_name, job_title, stipend_amount, last_
   }
 };
 
-const addIdeas = async(userID,title,stream,content)=>{
+
+const addIdeas = async(userID,title,stream,content,imageUrl)=>{
     try{
         const insertResult=await db.query(
-            'INSERT INTO ideas (user_id,title,stream,content) VALUES ($1, $2, $3, $4)',
-            [userID,title,stream,content]
+            'INSERT INTO ideas (user_id,title,stream,content,imageUrl) VALUES ($1, $2, $3, $4,$5)',
+            [userID,title,stream,content,imageUrl]
         );
         console.log(insertResult)
         return{success:true,message:"ideas added"}

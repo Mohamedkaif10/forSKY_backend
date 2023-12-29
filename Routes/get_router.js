@@ -188,4 +188,47 @@ router.get('/check-profile',verifyToken, async (req, res) => {
   }
 });
 
+
+router.get('/ideas', async (req, res) => {
+  try {
+    const ideas = await getIdeass();
+
+    const ideasWithImages = await Promise.all(
+      ideas.map(async (idea) => {
+        return {
+          ...idea,
+          imageUrl: await getImageUrl(idea.id), // Pass 'id' instead of 'image_id'
+        };
+      })
+    );
+
+    res.status(200).json(ideasWithImages);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal server error');
+  }
+});
+
+// Replace this function with your actual logic to fetch ideas from the database
+const getIdeass = async () => {
+  const result = await db.query('SELECT * FROM ideas');
+  return result.rows;
+};
+
+// Replace this function with your actual logic to fetch image URL based on idea_id
+const getImageUrl = async (ideaId) => {
+  try {
+    const result = await db.query('SELECT imageUrl FROM ideas WHERE id = $1', [ideaId]);
+
+    if (result.rows.length > 0) {
+      return result.rows[0].imageUrl;
+    } else {
+      throw new Error('Image URL not found for idea_id: ' + ideaId);
+    }
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error fetching image URL');
+  }
+};
+
 module.exports = router;
