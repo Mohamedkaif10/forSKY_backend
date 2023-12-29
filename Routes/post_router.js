@@ -142,10 +142,10 @@ router.post('/job-details-admin', upload.single('pdf'), async (req, res) => {
 });
 
 
-router.post('/ideas',uploads.single('image'),async(req,res)=>{
+router.post('/ideas',verifyToken,uploads.single('image'),async(req,res)=>{
   try{
     const{title,stream,content}=req.body;
-    const user_id = 1;
+    const user_id = req.user.id;
     if (!req.file) {
       return res.status(400).json({ error: 'Image file is required.' });
     }
