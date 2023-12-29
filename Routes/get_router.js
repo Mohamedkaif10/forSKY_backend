@@ -231,4 +231,95 @@ const getImageUrl = async (ideaId) => {
   }
 };
 
+router.get('/count-jrf', async (req, res) => {
+  try {
+    // Query to get the count of 'JRF'
+    const query = `
+      SELECT COUNT(*) AS jrf_count
+      FROM jobdetails
+      WHERE Job_title ILIKE 'JRF';
+    `; 
+
+    // Execute the query
+    const result = await db.query(query);
+
+    // Extract the count from the result
+    const jrfCount = result.rows[0].jrf_count;
+
+    // Send the count as a JSON response
+    res.json({ jrfCount });
+  } catch (error) {
+    console.error('Error executing query:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+router.get('/count-srf', async (req, res) => {
+  try {
+    // Query to get the count of 'JRF'
+    const query = `
+      SELECT COUNT(*) AS srf_count
+      FROM jobdetails
+      WHERE Job_title ILIKE 'SRF';
+    `; 
+
+    // Execute the query
+    const result = await db.query(query);
+
+    // Extract the count from the result
+    const srfCount = result.rows[0].srf_count;
+
+    // Send the count as a JSON response
+    res.json({ srfCount });
+  } catch (error) {
+    console.error('Error executing query:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+router.get('/count-project-associate', async (req, res) => {
+  try {
+    // Query to get the count of 'JRF'
+    const query = `
+      SELECT COUNT(*) AS projectassociate
+      FROM jobdetails
+      WHERE Job_title ILIKE 'project associate';
+    `; 
+
+    // Execute the query
+    const result = await db.query(query);
+
+    // Extract the count from the result
+    const projectassociate = result.rows[0].projectassociate;
+
+    // Send the count as a JSON response
+    res.json({ projectassociate });
+  } catch (error) {
+    console.error('Error executing query:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+router.get('/count-project-manager', async (req, res) => {
+  try {
+    // Query to get the count of 'JRF'
+    const query = `
+      SELECT COUNT(*) AS projectmanager
+      FROM jobdetails
+      WHERE Job_title ILIKE 'Project Manager';
+    `; 
+
+    // Execute the query
+    const result = await db.query(query);
+
+    // Extract the count from the result
+    const projectmanager = result.rows[0].projectmanager;
+
+    // Send the count as a JSON response
+    res.json({ projectmanager });
+  } catch (error) {
+    console.error('Error executing query:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 module.exports = router;
