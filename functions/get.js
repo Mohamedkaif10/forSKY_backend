@@ -105,7 +105,7 @@ const getIdeasByStream = async (stream) => {
 const getJobDetailsPage = async (page, pageSize) => {
   try {
     const offset = (page - 1) * pageSize;
-    const queryText = `SELECT * FROM jobdetails LIMIT ${pageSize} OFFSET ${offset}`;
+    const queryText = `SELECT * FROM jobdetails ORDER BY created_at DESC LIMIT ${pageSize} OFFSET ${offset}`;
 
     const result = await db.query(queryText);
     return result.rows;

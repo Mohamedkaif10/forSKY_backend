@@ -124,7 +124,7 @@ router.get('/job-details/:userId', async (req, res) => {
   });
 
   router.get('/job_details/user', async (req, res) => {
-    const userId = 13; // Assuming user_id is available in req.user.id
+    const userId = req.user.id; // Assuming user_id is available in req.user.id
   
     try {
       const result = await db.query('SELECT * FROM jobdetails WHERE user_id = $1', [userId]);
