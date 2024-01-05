@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const verifyToken = require('../Authorization/verifyToken');
-const { getProjects,getFilteredJobDetails,getJobDetails,getIdeas,getIdeasByStream,getJobDetailsPage,getBookmarks,searchJobs,getIdeaById} = require('../functions/get');
+const { getProjects,getFilteredJobDetails,getJobDetails,getIdeas,getIdeasByStream,getJobDetailsPage,getBookmarks,searchJobs,getIdeaById,getJobDetailsadmin} = require('../functions/get');
 const db=require('../Config/dbConnection')
 
 router.get('/subjects', async (req, res) => {
@@ -104,14 +104,12 @@ router.get('/filtered-job-details', async (req, res) => {
   }
 });
 
-router.get('/job-details/:userId',verifyToken, async (req, res) => {
+router.get('/job-details/:userId', async (req, res) => {
     try {
+
       const userId = req.params.userId;
-  
-      // Call the function to get job details by userId
       const userJobs = await getJobDetails(userId);
   
-      // Check if jobs are found
       if (!userJobs || userJobs.length === 0) {
         return res.status(404).json({ error: 'No jobs found for the user' });
       }
@@ -122,6 +120,32 @@ router.get('/job-details/:userId',verifyToken, async (req, res) => {
       console.log(error)
       console.error('Error in GET /job-details/:userId:', error);
       res.status(500).json({ error: 'Internal server error' });
+    }
+  });
+
+  router.get('/job_details/user', async (req, res) => {
+    const userId = 13; // Assuming user_id is available in req.user.id
+  
+    try {
+      const result = await db.query('SELECT * FROM jobdetails WHERE user_id = $1', [userId]);
+      const jobDetails = result.rows;
+  
+      res.json(jobDetails);
+    } catch (error) {
+      console.error('Error executing query', error);
+      res.status(500).send('Internal Server Error');
+    }
+  });
+
+  router.get('/admin', async (req, res) => {
+  try {
+      const result = await db.query('SELECT * FROM jobdetails')
+      const jobDetails = result.rows;
+  
+      res.json(jobDetails);
+    } catch (error) {
+      console.error('Error executing query', error);
+      res.status(500).send('Internal Server Error');
     }
   });
 

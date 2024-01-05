@@ -43,7 +43,20 @@ const getFilteredJobDetails = async (filters) => {
 };
 const getJobDetails = async (userId) => {
   try {
-    const sqlQuery = 'SELECT * FROM jobdetails WHERE user_id = $1 ORDER BY created_at DESC LIMIT 1';
+    const sqlQuery = 'SELECT * FROM jobdetails WHERE user_id = $1';
+    console.log('SQL Query:', sqlQuery);
+
+    const userJobs = await db.query(sqlQuery, [userId]);
+    return userJobs;
+  } catch (error) {
+    console.error('Error fetching job details:', error);
+    throw error;
+  }
+};
+
+const getJobDetailsadmin = async (userId) => {
+  try {
+    const sqlQuery = 'SELECT * FROM jobdetails';
     console.log('SQL Query:', sqlQuery);
 
     const userJobs = await db.query(sqlQuery, [userId]);
@@ -134,4 +147,4 @@ const getUserProfile = async (userId) => {
     throw error;
   }
 };
-module.exports = { getProjects,getFilteredJobDetails,getJobDetails,getIdeas,getIdeasByStream,getJobDetailsPage,getBookmarks,searchJobs,getIdeaById,getUserProfile};
+module.exports = { getProjects,getFilteredJobDetails,getJobDetails,getIdeas,getIdeasByStream,getJobDetailsPage,getBookmarks,searchJobs,getIdeaById,getUserProfile,getJobDetailsadmin};
