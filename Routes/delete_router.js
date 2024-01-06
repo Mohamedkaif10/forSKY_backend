@@ -38,4 +38,24 @@ router.delete('/bookmark/:jobId',verifyToken, async (req, res) => {
     }
   });
 
+  router.delete('/jobnew/:job_id', async (req, res) => {
+    const jobId = req.params.job_id;
+  
+    try {
+      const checkResult = await db.query('SELECT * FROM jobdetailsnew WHERE job_id = $1', [jobId]);
+  
+      if (checkResult.rows.length === 0) {
+        return res.status(404).json({ error: 'Job not found' });
+      }
+  
+      // Delete the job
+      await db.query('DELETE FROM jobdetailsnew WHERE job_id = $1', [jobId]);
+  
+      res.json({ message: 'Job deleted successfully' });
+    } catch (error) {
+      console.error('Error executing query', error);
+      res.status(500).send('Internal Server Error');
+    }
+  });
+
   module.exports = router;
