@@ -141,4 +141,21 @@ CREATE TABLE otps (
   user_id INT NOT NULL,
    FOREIGN KEY (user_id) REFERENCES users(id)
 );
--- Assuming the subject_id for "Chemistry" is 4
+
+CREATE TABLE  IF NOT EXISTS jobdetailsnew(
+  job_id SERIAL PRIMARY KEY,
+  user_id INT NOT NULL,
+  department_name VARCHAR(255) NOT NULL,
+  job_title VARCHAR(255) NOT NULL,
+  stipend_amount INT NOT NULL,
+  last_date DATE,
+  vacancies VARCHAR(255),
+  location VARCHAR(255),
+  scholar_link VARCHAR(255),
+  duration VARCHAR(255),
+  description TEXT,
+  link TEXT,
+  institute VARCHAR(255),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);

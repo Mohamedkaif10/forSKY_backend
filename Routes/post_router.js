@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { registerUser, loginUser } = require('../Authorization/auth');
 const verifyToken = require('../Authorization/verifyToken');
-const { addAdditionalInfo,addprojects,scheduleInterview ,addjobDetails,addIdeas,bookmarkJob} = require('../functions/post');
+const { addAdditionalInfo,addprojects,scheduleInterview ,addjobDetails,addIdeas,bookmarkJob,addjobDetailsnew} = require('../functions/post');
 const drive= require('../Config/gDriveConfig')
 const multer = require('multer');
 const storage = multer.memoryStorage(); 
@@ -134,6 +134,23 @@ router.post('/job-details-admin', upload.single('pdf'), async (req, res) => {
     await addjobDetails(userId, dept_name, job_title, stipend_amount, last_date, vacancies, location, scholar_link, duration, description, pdf_name, pdfId, institute);
 
     res.json({ success: true, message: 'Job details added', pdfId });
+    res.status(200);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.post('/job-details-admin-new', async (req, res) => {
+  console.log(req.body);
+
+  try {
+    const { dept_name, job_title, stipend_amount, last_date, vacancies, location, scholar_link, duration, description, institute ,link} = req.body;
+    const userId = 1;
+   
+    await addjobDetailsnew(userId, dept_name, job_title, stipend_amount, last_date, vacancies, location, scholar_link, duration, description,institute,link);
+
+    res.json({ success: true, message: 'Job details added' });
     res.status(200);
   } catch (error) {
     console.error(error);

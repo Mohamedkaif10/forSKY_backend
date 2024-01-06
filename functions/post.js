@@ -70,6 +70,25 @@ const addjobDetails = async (userID, dept_name, job_title, stipend_amount, last_
   }
 };
 
+const addjobDetailsnew = async (userID, dept_name, job_title, stipend_amount, last_date, vacancies, location, scholar_link, duration, description, link ,institute) => {
+  try {
+    const insertResult = await db.query('INSERT INTO jobdetailsnew(user_id,department_name,job_title,stipend_amount,last_date,vacancies,location,scholar_link,duration,description,link,institute) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)',
+      [userID, dept_name, job_title, stipend_amount, last_date, vacancies, location, scholar_link, duration, description, link,institute]
+    );
+
+    console.log(insertResult);
+
+    if (insertResult.rowCount > 0) {
+      return { success: true, message: "Job details added" };
+    } else {
+      throw new Error('Failed to add job details');
+    }
+  } catch (error) {
+    console.error(error);
+    throw new Error('Internal Server Error');
+  }
+};
+
 
 const addIdeas = async(userID,title,stream,content,imageUrl)=>{
     try{
@@ -149,4 +168,4 @@ const createUserProfile = async (profileData) => {
 
 
 
-module.exports = { addAdditionalInfo ,addprojects,scheduleInterview, addjobDetails,addIdeas,bookmarkJob,addImage,createUserProfile,getUserProfile};
+module.exports = { addAdditionalInfo ,addprojects,scheduleInterview, addjobDetails,addIdeas,bookmarkJob,addImage,createUserProfile,getUserProfile,addjobDetailsnew};
