@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { registerUser, loginUser } = require('../Authorization/auth');
 const verifyToken = require('../Authorization/verifyToken');
-const { addAdditionalInfo,addprojects,scheduleInterview ,addjobDetails,addIdeas,bookmarkJob,addjobDetailsnew} = require('../functions/post');
+const { addAdditionalInfo,addprojects,scheduleInterview ,addjobDetails,addIdeas,bookmarkJob,addjobDetailsnew,addjobDetailsuser} = require('../functions/post');
 const drive= require('../Config/gDriveConfig')
 const multer = require('multer');
 const storage = multer.memoryStorage(); 
@@ -101,6 +101,32 @@ router.post('/job-details', verifyToken, upload.single('pdf'), async (req, res) 
 });
 
 
+router.post('/job-details-new', verifyToken, async (req, res) => {
+  console.log(req.body);
+
+  try {
+    const { dept_name, job_title, stipend_amount, last_date, vacancies, location, scholar_link, duration, description, institute,link} = req.body;
+    const userId = req.user.id;
+    const originalDate = new Date(last_date);
+
+    
+    const newDate = new Date(originalDate);
+    newDate.setDate(originalDate.getDate() + 1);
+    const newLastDate = newDate.toISOString();
+   
+  
+
+ await addjobDetailsuser(userId, dept_name, job_title, stipend_amount,newLastDate, vacancies, location, scholar_link, duration, description,institute,link);
+
+    res.json({ success: true, message: 'Job details added'});
+    res.status(200);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
 router.post('/job-details-admin', upload.single('pdf'), async (req, res) => {
   console.log("the ", req.file);
   console.log(req.body);
@@ -149,12 +175,12 @@ router.post('/job-details-admin-new', async (req, res) => {
     const userId = 1;
     const originalDate = new Date(last_date);
 
-    // Add 1 day to the date
+    
     const newDate = new Date(originalDate);
     newDate.setDate(originalDate.getDate() + 1);
     const newLastDate = newDate.toISOString();
    
-    await addjobDetailsnew(userId, dept_name, job_title, stipend_amount, newLastDate, vacancies, location, scholar_link, duration, description,institute,link);
+    await addjobDetailsnew(userId, dept_name, job_title, stipend_amount,last_date, vacancies, location, scholar_link, duration, description,institute,link);
 
     res.json({ success: true, message: 'Job details added' });
     res.status(200);
