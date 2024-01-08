@@ -10,6 +10,7 @@ const getProjects = async (userId) => {
     );
 
     const jobdetails = result.rows;
+
     return jobdetails;
   } catch (error) {
     console.error(error);
@@ -18,7 +19,7 @@ const getProjects = async (userId) => {
 };
 
 const getFilteredJobDetails = async (filters) => {
-  let queryText = 'SELECT * FROM jobdetails WHERE 1=1';
+  let queryText = 'SELECT * FROM jobdetailsnew WHERE 1=1';
 
   if (filters.location) {
     queryText += ` AND location = '${filters.location}'`;
@@ -67,6 +68,30 @@ const getJobDetailsadmin = async (userId) => {
   }
 };
 
+const getJobDetailsPage = async (page, pageSize) => {
+  try {
+    const offset = (page - 1) * pageSize;
+    const queryText = `SELECT * FROM jobdetailsnew ORDER BY created_at DESC LIMIT ${pageSize} OFFSET ${offset}`;
+
+    const result = await db.query(queryText);
+    const formattedJobDetails = result.rows.map(row => {
+      if (row.last_date) {
+        const date = new Date(row.last_date);
+        const options = { day: 'numeric', month: 'long', year: 'numeric' };
+        row.last_date = `${date.toLocaleDateString('en-US', options).split(' ')[1]} ${date.toLocaleDateString('en-US', options).split(' ')[0]}, ${date.toLocaleDateString('en-US', options).split(' ')[2]}`;
+      } else {
+        row.last_date = 'Rolling';
+      }
+      return row;
+    });
+
+    return formattedJobDetails;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error fetching job details');
+  }
+};
+
 const getIdeas = async()=>{
   try{
     const result = await db.query(
@@ -102,18 +127,7 @@ const getIdeasByStream = async (stream) => {
   }
 };
 
-const getJobDetailsPage = async (page, pageSize) => {
-  try {
-    const offset = (page - 1) * pageSize;
-    const queryText = `SELECT * FROM jobdetails ORDER BY created_at DESC LIMIT ${pageSize} OFFSET ${offset}`;
 
-    const result = await db.query(queryText);
-    return result.rows;
-  } catch (error) {
-    console.error(error);
-    throw new Error('Error fetching job details');
-  }
-};
 
 const getBookmarks = async (userId) => {
   try {
