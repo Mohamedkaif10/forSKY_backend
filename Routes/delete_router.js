@@ -7,7 +7,7 @@ const {unbookmarkJob}= require('../functions/delete')
 
 router.delete('/bookmark/:jobId',verifyToken, async (req, res) => {
     try {
-      const userId = req.user.id; // Assuming you have user information in req.user
+      const userId = req.user.id;
       const jobId = req.params.jobId;
   
       const result = await unbookmarkJob(userId, jobId);
@@ -27,8 +27,6 @@ router.delete('/bookmark/:jobId',verifyToken, async (req, res) => {
       if (checkResult.rows.length === 0) {
         return res.status(404).json({ error: 'Job not found' });
       }
-  
-      // Delete the job
       await db.query('DELETE FROM jobdetails WHERE job_id = $1', [jobId]);
   
       res.json({ message: 'Job deleted successfully' });
@@ -47,8 +45,6 @@ router.delete('/bookmark/:jobId',verifyToken, async (req, res) => {
       if (checkResult.rows.length === 0) {
         return res.status(404).json({ error: 'Job not found' });
       }
-  
-      // Delete the job
       await db.query('DELETE FROM jobdetailsnew WHERE job_id = $1', [jobId]);
   
       res.json({ message: 'Job deleted successfully' });

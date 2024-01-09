@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const verifyToken = require('../Authorization/verifyToken');
-const { getProjects,getFilteredJobDetails,getJobDetails,getIdeas,getIdeasByStream,getJobDetailsPage,getBookmarks,searchJobs,getIdeaById,getJobDetailsadmin} = require('../functions/get');
+const { getFilteredJobDetails,getJobDetails,getIdeas,getIdeasByStream,getJobDetailsPage,getBookmarks,searchJobs,getIdeaById,getJobDetailsadmin} = require('../functions/get');
 const db=require('../Config/dbConnection')
 
 router.get('/subjects', async (req, res) => {
@@ -74,17 +74,17 @@ router.get('/user-profile', verifyToken, async (req, res) => {
   }
 });
 
-router.get('/projects', verifyToken, async (req, res) => {
-  try {
-    const userId = req.user.id;
-    const projects = await getProjects(userId);
+// router.get('/projects', verifyToken, async (req, res) => {
+//   try {
+//     const userId = req.user.id;
+//     const projects = await getProjects(userId);
 
-    res.json({ success: true, projects });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Internal Server Error');
-  }
-});
+//     res.json({ success: true, projects });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send('Internal Server Error');
+//   }
+// });
 
 router.get('/filtered-job-details', async (req, res) => {
   try {
@@ -113,8 +113,6 @@ router.get('/job-details/:userId', async (req, res) => {
       if (!userJobs || userJobs.length === 0) {
         return res.status(404).json({ error: 'No jobs found for the user' });
       }
-  
-      // Respond with the list of jobs
       res.status(200).json({ success: true, userJobs });
     } catch (error) {
       console.log(error)
@@ -124,10 +122,10 @@ router.get('/job-details/:userId', async (req, res) => {
   });
 
   router.get('/job_details/user', async (req, res) => {
-    const userId = req.user.id; // Assuming user_id is available in req.user.id
+    const userId = req.user.id;
   
     try {
-      const result = await db.query('SELECT * FROM jobdetails WHERE user_id = $1', [userId]);
+      const result = await db.query('SELECT * FROM jobdetailsnew WHERE user_id = $1', [userId]);
       const jobDetails = result.rows;
   
       res.json(jobDetails);
@@ -137,17 +135,17 @@ router.get('/job-details/:userId', async (req, res) => {
     }
   });
 
-  router.get('/admin', async (req, res) => {
-  try {
-      const result = await db.query('SELECT * FROM jobdetails')
-      const jobDetails = result.rows;
+  // router.get('/admin', async (req, res) => {
+  // try {
+  //     const result = await db.query('SELECT * FROM jobdetails')
+  //     const jobDetails = result.rows;
   
-      res.json(jobDetails);
-    } catch (error) {
-      console.error('Error executing query', error);
-      res.status(500).send('Internal Server Error');
-    }
-  });
+  //     res.json(jobDetails);
+  //   } catch (error) {
+  //     console.error('Error executing query', error);
+  //     res.status(500).send('Internal Server Error');
+  //   }
+  // });
   router.get('/admin/new', async (req, res) => {
     try {
       const result = await db.query('SELECT * FROM jobdetailsnew ORDER BY created_at DESC');
@@ -172,7 +170,7 @@ router.get('/job-details/:userId', async (req, res) => {
   });
   router.get('/bookmarks', verifyToken,async (req, res) => {
     try {
-      const userId = req.user.id; // Assuming you have user information in req.user
+      const userId = req.user.id; 
       const bookmarks = await getBookmarks(userId);
   
       res.json({ success: true, bookmarks });
@@ -184,16 +182,12 @@ router.get('/job-details/:userId', async (req, res) => {
 
   router.get('/search', async (req, res) => {
     const { location, department_name } = req.query;
-
-    // Validate that both location and department_name are provided
     if (!location && !department_name) {
         return res.status(400).json({ error: 'Both location and department_name are required.' });
     }
 
     try {
         const jobs = await searchJobs(location, department_name);
-
-        // Check if the result array is empty
         if (jobs.length === 0) {
             return res.status(404).json({ error: 'No matching jobs found.' });
         }
@@ -232,7 +226,7 @@ router.get('/ideas', async (req, res) => {
       ideas.map(async (idea) => {
         return {
           ...idea,
-          imageUrl: await getImageUrl(idea.id), // Pass 'id' instead of 'image_id'
+          imageUrl: await getImageUrl(idea.id), 
         };
       })
     );
@@ -243,14 +237,10 @@ router.get('/ideas', async (req, res) => {
     res.status(500).send('Internal server error');
   }
 });
-
-// Replace this function with your actual logic to fetch ideas from the database
 const getIdeass = async () => {
   const result = await db.query('SELECT * FROM ideas');
   return result.rows;
 };
-
-// Replace this function with your actual logic to fetch image URL based on idea_id
 const getImageUrl = async (ideaId) => {
   try {
     const result = await db.query('SELECT imageUrl FROM ideas WHERE id = $1', [ideaId]);

@@ -2,21 +2,21 @@
 const db = require('../Config/dbConnection');
 
 // Function to get project details
-const getProjects = async (userId) => {
-  try {
-    const result = await db.query(
-      'SELECT * FROM jobdetails WHERE user_id = $1',
-      [userId]
-    );
+// const getProjects = async (userId) => {
+//   try {
+//     const result = await db.query(
+//       'SELECT * FROM jobdetails WHERE user_id = $1',
+//       [userId]
+//     );
 
-    const jobdetails = result.rows;
+//     const jobdetails = result.rows;
 
-    return jobdetails;
-  } catch (error) {
-    console.error(error);
-    throw new Error('Error fetching projects');
-  }
-};
+//     return jobdetails;
+//   } catch (error) {
+//     console.error(error);
+//     throw new Error('Error fetching projects');
+//   }
+// };
 
 const getFilteredJobDetails = async (filters) => {
   let queryText = 'SELECT * FROM jobdetailsnew WHERE 1=1';
@@ -161,4 +161,4 @@ const getUserProfile = async (userId) => {
     throw error;
   }
 };
-module.exports = { getProjects,getFilteredJobDetails,getJobDetails,getIdeas,getIdeasByStream,getJobDetailsPage,getBookmarks,searchJobs,getIdeaById,getUserProfile,getJobDetailsadmin};
+module.exports = {getFilteredJobDetails,getJobDetails,getIdeas,getIdeasByStream,getJobDetailsPage,getBookmarks,searchJobs,getIdeaById,getUserProfile,getJobDetailsadmin};
