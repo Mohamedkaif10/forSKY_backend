@@ -134,18 +134,6 @@ router.get('/job-details/:userId', async (req, res) => {
       res.status(500).send('Internal Server Error');
     }
   });
-
-  // router.get('/admin', async (req, res) => {
-  // try {
-  //     const result = await db.query('SELECT * FROM jobdetails')
-  //     const jobDetails = result.rows;
-  
-  //     res.json(jobDetails);
-  //   } catch (error) {
-  //     console.error('Error executing query', error);
-  //     res.status(500).send('Internal Server Error');
-  //   }
-  // });
   router.get('/admin/new', async (req, res) => {
     try {
       const result = await db.query('SELECT * FROM jobdetailsnew ORDER BY created_at DESC');

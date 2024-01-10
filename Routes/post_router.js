@@ -64,11 +64,8 @@ router.post('/job-details-new', verifyToken, async (req, res) => {
     const newDate = new Date(originalDate);
     newDate.setDate(originalDate.getDate() + 1);
     const newLastDate = newDate.toISOString();
-   
-  
 
- await addjobDetailsuser(userId, dept_name, job_title, stipend_amount,newLastDate, vacancies, location, scholar_link, duration, description,institute,link);
-
+    await addjobDetailsnew(userId, dept_name, job_title, stipend_amount,newLastDate, vacancies, location, scholar_link, duration, description,institute,link);
     res.json({ success: true, message: 'Job details added'});
     res.status(200);
   } catch (error) {
@@ -86,6 +83,7 @@ router.post('/job-details-admin-new', async (req, res) => {
   try {
     const { dept_name, job_title, stipend_amount, last_date, vacancies, location, scholar_link, duration, description, institute ,link} = req.body;
     const userId = 1;
+
     const originalDate = new Date(last_date);
 
     
@@ -93,7 +91,7 @@ router.post('/job-details-admin-new', async (req, res) => {
     newDate.setDate(originalDate.getDate() + 1);
     const newLastDate = newDate.toISOString();
    
-    await addjobDetailsnew(userId, dept_name, job_title, stipend_amount,last_date, vacancies, location, scholar_link, duration, description,institute,link);
+    await addjobDetailsnew(userId, dept_name, job_title, stipend_amount,newLastDate, vacancies, location, scholar_link, duration, description,institute,link);
 
     res.json({ success: true, message: 'Job details added' });
     res.status(200);
