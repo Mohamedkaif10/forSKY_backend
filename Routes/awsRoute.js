@@ -30,25 +30,18 @@ const upload = multer({
 router.post('/create-profile',verifyToken, upload.single('image'), async (req, res) => {
   try {
     const { full_name, email, mobile_number, work_status, present_location, description } = req.body;
-
-    // Extract user_id from the authenticated user
     const user_id =req.user.id;
-
-    // Check if the user has already completed their profile
     const profileCheck = await db.query('SELECT * FROM user_profiles WHERE user_id = $1', [user_id]);
 
     if (profileCheck.rows.length != 0) {
       return res.status(400).json({ error: 'User profile already exists.' });
     }
-
-    // Handle image upload
     if (!req.file) {
       return res.status(400).json({ error: 'Image file is required.' });
     }
 
     const buffer = await Jimp.read(req.file.buffer)
   .then(image => {
-    // Resize the image
     return image.resize(200, 100)
                 .quality(90)   
                 .getBufferAsync(Jimp.AUTO);
@@ -68,8 +61,6 @@ router.post('/create-profile',verifyToken, upload.single('image'), async (req, r
     await s3.send(command);
 
     const imageUrl = `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/${req.file.originalname}`;
-
-    // Insert the new profile and set profile_completed to true and image_url
     const result = await db.query(
       'INSERT INTO user_profiles (full_name, email, mobile_number, work_status, present_location, description, user_id, profile_completed, image_url) VALUES ($1, $2, $3, $4, $5, $6, $7, TRUE, $8) RETURNING *',
       [full_name, email, mobile_number, work_status, present_location, description, user_id, imageUrl]
@@ -81,12 +72,9 @@ router.post('/create-profile',verifyToken, upload.single('image'), async (req, r
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-router.get('/user-profile',verifyToken, async (req, res) => {
+router.get('/user-pro', verifyToken,async (req, res) => {
   try {
-    // Extract user_id from the authenticated user
-    const user_id = req.user.id;  // Change this to extract user_id from your authentication mechanism
-
-    // Retrieve the user profile
+    const user_id =req.user.id;
     const profileResult = await db.query('SELECT * FROM user_profiles WHERE user_id = $1', [user_id]);
 
     if (profileResult.rows.length === 0) {
