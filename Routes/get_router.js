@@ -19,7 +19,7 @@ router.get('/departments/:subjectId', async (req, res) => {
   try {
     const result = await db.query('SELECT * FROM departments WHERE subject_id = $1', [subjectId]);
     res.json(result.rows);
-  } catch (error) {
+  } catch (error) {    
     console.error('Error getting departments:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
@@ -29,9 +29,18 @@ router.get('/get_job', async (req, res) => {
     const page = parseInt(req.query.page, 10) || 1;
     const pageSize = parseInt(req.query.pageSize, 10) || 5;
 
-    const jobDetails = await getJobDetailsPage (page, pageSize);
+    const jobDetails = await getJobDetailsPage(page, pageSize);
 
     res.json({ success: true, jobDetails, page, pageSize });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+router.get('/get-job-full', async (req, res) => {
+  try {
+    const jobDetails = await getJobDetailsadmin();
+    res.json({ success: true, jobDetails });
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal Server Error');

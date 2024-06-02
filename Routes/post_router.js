@@ -152,6 +152,45 @@ router.post('/bookmark/:jobId', verifyToken,async (req, res) => {
 router.post('/send-otp', sendOTP);
 
 router.post('/verify-otp', verifyOTP);
+router.post('/newusers-register', async (req, res) => {
+  const { firstname, lastname, password, email, phone_no } = req.body;
 
+  try {
+   
+    const query = `
+      INSERT INTO new_users (firstname, lastname, password, email, phone_no, role)
+      VALUES ($1, $2, $3, $4, $5, $6)
+      RETURNING *;
+    `;
+    const values = [firstname, lastname, password, email, phone_no, 'user'];
 
+    const result = await pool.query(query, values);
+
+    res.status(201).json({ success: true, message: 'User registered successfully', data: result.rows[0] });
+  } catch (error) {
+    console.error('Error registering new user:', error);
+    res.status(500).json({ success: false, message: 'Failed to register user' });
+  }
+});
+
+router.post('/newmentors-register', async (req, res) => {
+  const { firstname, lastname, password, email, phone_no } = req.body;
+
+  try {
+   
+    const query = `
+      INSERT INTO new_users (firstname, lastname, password, email, phone_no, role)
+      VALUES ($1, $2, $3, $4, $5, $6)
+      RETURNING *;
+    `;
+    const values = [firstname, lastname, password, email, phone_no, 'mentor'];
+
+    const result = await pool.query(query, values);
+
+    res.status(201).json({ success: true, message: 'User registered successfully', data: result.rows[0] });
+  } catch (error) {
+    console.error('Error registering new user:', error);
+    res.status(500).json({ success: false, message: 'Failed to register user' });
+  }
+});
 module.exports = router

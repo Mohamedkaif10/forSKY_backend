@@ -159,3 +159,16 @@ CREATE TABLE  IF NOT EXISTS jobdetailsnew(
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
+
+
+CREATE TABLE IF NOT EXISTS new_users (
+  id SERIAL PRIMARY KEY,
+  firstname VARCHAR(255) ,
+  lastname VARCHAR(255),
+  password VARCHAR(255),
+  email VARCHAR(255),
+  phone_no VARCHAR(20),
+  google_id VARCHAR(50),
+  display_name VARCHAR(50),
+  role 
+);
