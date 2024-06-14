@@ -28,10 +28,14 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(dynamicJwtCheck);
 passport.initialize()
+app.get('/', (req, res) => {
+  // Optional: Access user information from authentication middleware (if applicable)
+  res.send("Api is working healthy")
+});
 app.use('/api', routes);
 app.use('/api',getroutes);
 app.use('/api',delete_router)
-app.use('/',googleAuth);
+// app.use('/',googleAuth);
 app.use('/api',put_router)
 app.use('/api',drive_router)
 app.use('/api',aws_router)
