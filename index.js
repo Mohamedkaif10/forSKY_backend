@@ -12,16 +12,21 @@ const mentor_router=require('./Routes/mentoroutes')
 const app = express();
 const cors = require("cors");
 const session = require('express-session');
+const dynamicJwtCheck = require('./Authorization/dynamicVerifyToken');
 require('dotenv').config();
 const PORT = process.env.PORT || 8002;
 const secret = process.env.secretKey
 app.use(session({ secret: secret, resave: true, saveUninitialized: true }));
 app.use(bodyParser.json());
 const corsOptions = {
-  origin: ["https://forsync.vercel.app", "https://forsync-admin.vercel.app","https://tayog.vercel.app"],
+  origin: ["https://forsync.vercel.app", "https://forsync-admin.vercel.app","https://tayog.vercel.app", "http://localhost:3000", "https://tayogfrontend.vercel.app/"],
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 };
+
 app.use(cors(corsOptions));
+app.use(dynamicJwtCheck);
 passport.initialize()
 app.use('/api', routes);
 app.use('/api',getroutes);
@@ -32,5 +37,5 @@ app.use('/api',drive_router)
 app.use('/api',aws_router)
 app.use('/api',mentor_router)
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on port http://localhost:${PORT}`);
 });
