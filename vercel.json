@@ -11,7 +11,7 @@
         "src": "/(.*)",
         "dest": "/",
         "headers": {
-          "Access-Control-Allow-Origin": "https://tayogfrontend.vercel.app"
+          "Access-Control-Allow-Origin": "https://tayogfrontend.vercel.app",
           "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
           "Access-Control-Allow-Headers": "X-Requested-With, Content-Type, Accept",
           "Access-Control-Allow-Credentials": "true"
