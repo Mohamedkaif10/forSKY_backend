@@ -11,7 +11,6 @@
         "src": "/(.*)",
         "dest": "/",
         "headers": {
-//          "Access-Control-Allow-Origin": "https://forsync.vercel.app https://forsync-admin.vercel.app https://tayog.vercel.app",
           "Access-Control-Allow-Origin": "https://tayogfrontend.vercel.app"
           "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
           "Access-Control-Allow-Headers": "X-Requested-With, Content-Type, Accept",
