@@ -1,10 +1,5 @@
 CREATE SCHEMA IF NOT EXISTS forsky;
 
--- Set the search path to the 'forsky' schema
-SET search_path TO forsky;
-DROP TABLE IF EXISTS projects CASCADE;
-DROP SEQUENCE IF EXISTS projects_id_seq;
-
 CREATE SEQUENCE projects_id_seq;
 CREATE TABLE IF NOT EXISTS users (
   id SERIAL PRIMARY KEY,

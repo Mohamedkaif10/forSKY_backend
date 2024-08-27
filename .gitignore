@@ -1,6 +1,7 @@
 node_modules
-package-lock.json
 .env
 token.json
 uploads
 docker-compose.yaml
+credentials.json
+package-lock.json
